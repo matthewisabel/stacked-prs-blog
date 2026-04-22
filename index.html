@@ -607,44 +607,32 @@
      CALLOUT BOXES — Primer Flash / Alert pattern
      ═══════════════════════════════════════════════════════ */
   .callout {
-    border: 1px solid var(--borderColor-default);
-    border-radius: var(--radius-medium);
-    padding: var(--base-size-16);
+    border: none;
+    border-left: 3px solid var(--borderColor-default);
+    border-radius: 0;
+    padding: var(--base-size-4) var(--base-size-16);
     margin: var(--base-size-24) 0;
-    background: var(--bgColor-muted);
+    background: none;
   }
-  .callout.insight {
-    border-color: var(--color-accent-emphasis);
-    background: var(--color-accent-subtle);
-  }
-  .callout.warning {
-    border-color: var(--color-attention-fg);
-    background: var(--color-attention-subtle);
-  }
-  .callout.key-point {
-    border-color: var(--color-success-emphasis);
-    background: var(--color-success-subtle);
-  }
+  .callout.insight   { border-left-color: var(--color-accent-fg); }
+  .callout.warning   { border-left-color: var(--color-attention-fg); }
+  .callout.key-point { border-left-color: var(--color-success-fg); }
 
   .callout-header {
     font-size: var(--text-body-size-small);
-    font-weight: 700;
+    font-weight: 600;
     text-transform: uppercase;
-    letter-spacing: .05em;
+    letter-spacing: .04em;
     margin-bottom: var(--base-size-4);
+    color: var(--fgColor-muted);
   }
-  .callout.insight .callout-header  { color: var(--color-accent-fg); }
-  .callout.warning .callout-header  { color: var(--color-attention-fg); }
-  .callout.key-point .callout-header { color: var(--color-success-fg); }
 
   .callout p {
     margin-bottom: 0;
     font-size: var(--text-body-size-medium);
     line-height: 1.5;
+    color: var(--fgColor-muted);
   }
-  .callout.insight p  { color: var(--fgColor-default); }
-  .callout.warning p  { color: var(--fgColor-default); }
-  .callout.key-point p { color: var(--fgColor-default); }
 
   /* ═══════════════════════════════════════════════════════
      TABLE — Primer DataTable pattern
@@ -898,26 +886,16 @@
     <p>This isn't hypothetical. Teams using Copilot coding agents are already seeing branches created, pushed, and PR'd in minutes. The traditional mental model — one developer, one branch, one review cycle — is buckling under the weight of a world where your AI collaborator doesn't need coffee breaks.</p>
 
     <!-- DIAGRAM 1: Commit Velocity Comparison -->
-    <div class="diagram">
+    <div class="diagram" id="viz-velocity">
       <div class="diagram-canvas">
-        <div class="flow-line" style="width:60%; top:30%; left:10%;"></div>
-        <div class="flow-line" style="width:45%; top:50%; left:25%;"></div>
-        <div class="flow-line" style="width:55%; top:70%; left:15%;"></div>
-        <div class="diagram-icon">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
-            <polyline points="22 12 18 12 15 21 9 3 6 12 2 12"></polyline>
-          </svg>
-          <span class="label">Interactive Diagram</span>
-        </div>
+        <canvas id="velocity-canvas"></canvas>
+        <div class="fpo-overlay">FPO</div>
       </div>
       <div class="diagram-description">
         <div class="diagram-title">Commit Velocity: Human vs. Human + Agent</div>
         <div class="diagram-spec">
-          <strong>Animated timeline visualization.</strong> Left side shows a typical developer's commit cadence over a week — bursty, with long gaps for review and context-switching. Right side shows the same developer paired with an agent: steady, high-frequency commits filling the gaps. A draggable <strong>time scrubber</strong> lets the reader advance through a simulated week. Commit dots pulse into existence and stack vertically when they collide in time. A running counter shows cumulative commits, lines changed, and PRs opened. The "aha" moment: watching the agent's timeline stay active during the developer's off-hours.
-          <br><br>
-          <strong>Interaction:</strong> Drag to scrub time. Toggle between "single dev," "dev + agent," and "5 devs + agents" modes. Hover commits to see mock descriptions.
+          <strong>Animated timeline</strong> — bursty human commits on top, steady agent-augmented flow below.
         </div>
-        <span class="diagram-tag tag-interactive">Interactive · Draggable Timeline</span>
         <span class="diagram-tag tag-animated">Animated · Auto-play on Scroll</span>
       </div>
     </div>
@@ -932,34 +910,22 @@
     <p>This means agents naturally produce work that maps well to stacks: each task is a self-contained unit that depends on the previous one. The challenge is giving agents a framework to express this dependency explicitly, rather than dumping everything into one monolithic branch.</p>
 
     <!-- DIAGRAM 2: Agent Task Decomposition → Branch Structure -->
-    <div class="diagram">
+    <div class="diagram" id="viz-decomp">
       <div class="diagram-canvas">
-        <div class="flow-line" style="width:50%; top:35%; left:20%;"></div>
-        <div class="flow-line" style="width:40%; top:55%; left:30%;"></div>
-        <div class="diagram-icon">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
-            <circle cx="12" cy="12" r="3"></circle>
-            <path d="M12 1v4M12 19v4M4.22 4.22l2.83 2.83M16.95 16.95l2.83 2.83M1 12h4M19 12h4M4.22 19.78l2.83-2.83M16.95 7.05l2.83-2.83"></path>
-          </svg>
-          <span class="label">Interactive Diagram</span>
-        </div>
+        <canvas id="decomp-canvas"></canvas>
+        <div class="fpo-overlay">FPO</div>
       </div>
       <div class="diagram-description">
         <div class="diagram-title">Agent Task Decomposition → Branch Structure</div>
         <div class="diagram-spec">
-          <strong>Animated transformation diagram.</strong> Starts with a single large task card (e.g., "Add user authentication") that visually fractures into 4 sub-task cards via a satisfying shatter animation. Each sub-task card then morphs into a branch, and the branches arrange themselves into a vertical stack connected by arrows. Labels animate in: <code>auth-model → auth-routes → auth-middleware → auth-tests</code>.
-          <br><br>
-          The second phase shows what happens <em>without</em> stacks: the same 4 sub-tasks collapse into a single bloated branch with a red warning pulse showing 847 lines changed. A toggle lets the reader flip between "stacked" and "monolith" views.
-          <br><br>
-          <strong>Interaction:</strong> Click to replay the decomposition animation. Toggle between stacked/monolith views. Hover each layer to see a mock diff stat.
+          <strong>Animated transformation</strong> — a monolith task fractures into 4 stacked layers.
         </div>
-        <span class="diagram-tag tag-animated">Animated · Shatter + Morph</span>
-        <span class="diagram-tag tag-interactive">Interactive · Toggle View</span>
+        <span class="diagram-tag tag-animated">Animated · Morph Sequence</span>
       </div>
     </div>
 
     <div class="callout insight">
-      <div class="callout-header">💡 Key Insight</div>
+      <div class="callout-header">Key Insight</div>
       <p>Agents don't need to understand your whole codebase to produce well-structured stacks. They need a <strong>protocol</strong> for expressing task dependencies — and that protocol is exactly what <code>gh stack</code> provides.</p>
     </div>
 
@@ -971,32 +937,17 @@
     <p>This is where stacked PRs become not just a nice workflow, but a structural necessity. When work is organized into a linear chain of dependencies, the merge semantics are unambiguous. Layer 1 merges first. Layer 2 rebases onto the updated main. Layer 3 follows. There's no diamond-shaped merge graph, no ambiguous three-way merge — just a clean, linear history.</p>
 
     <!-- DIAGRAM 3: Conflict Surface Area -->
-    <div class="diagram">
+    <div class="diagram" id="viz-conflict">
       <div class="diagram-canvas">
-        <div class="flow-line" style="width:70%; top:25%; left:5%;"></div>
-        <div class="flow-line" style="width:55%; top:45%; left:15%;"></div>
-        <div class="flow-line" style="width:65%; top:65%; left:10%;"></div>
-        <div class="diagram-icon">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
-            <path d="M6 3v12"></path>
-            <circle cx="18" cy="6" r="3"></circle>
-            <circle cx="6" cy="18" r="3"></circle>
-            <path d="M18 9a9 9 0 0 1-9 9"></path>
-          </svg>
-          <span class="label">Interactive Diagram</span>
-        </div>
+        <canvas id="conflict-canvas"></canvas>
+        <div class="fpo-overlay">FPO</div>
       </div>
       <div class="diagram-description">
         <div class="diagram-title">Conflict Surface Area: Parallel Branches vs. Stacked PRs</div>
         <div class="diagram-spec">
-          <strong>Split-screen animated git graph.</strong> Left panel: 3 independent feature branches diverging from main, each modifying overlapping files. As commits accumulate, red "conflict zones" pulse and grow where branches touch the same files — visualized as overlapping heat-map regions. A merge attempt shows the classic diamond merge with red ✕ markers.
-          <br><br>
-          Right panel: the same 3 features organized as a stack. Commits flow linearly. The heat-map regions never overlap because each layer builds atop the last. Merge is a clean cascade with green ✓ markers. A <strong>file-overlap counter</strong> tracks how many files are touched by multiple branches in each mode.
-          <br><br>
-          <strong>Interaction:</strong> Drag a slider to add more commits and watch conflict zones grow/shrink. Click individual commits to see which files they touch. Play/pause the auto-advance.
+          <strong>Split-screen comparison</strong> — parallel branches grow conflict zones; a linear stack stays clean.
         </div>
-        <span class="diagram-tag tag-interactive">Interactive · Slider + Click</span>
-        <span class="diagram-tag tag-scroll">Scroll-Triggered · Split View</span>
+        <span class="diagram-tag tag-animated">Animated · Split View</span>
       </div>
     </div>
 
@@ -1061,38 +1012,22 @@
     <p>Stacked PRs provide natural isolation boundaries. Each stack is a self-contained chain of changes. Two stacks can evolve independently as long as they don't touch the same files. And when they do overlap, the linear merge semantics of stacks make resolution predictable: one stack merges first, the other rebases on top.</p>
 
     <!-- DIAGRAM 5: Multi-Agent Coordination -->
-    <div class="diagram">
+    <div class="diagram" id="viz-multiagent">
       <div class="diagram-canvas">
-        <div class="flow-line" style="width:40%; top:20%; left:30%;"></div>
-        <div class="flow-line" style="width:50%; top:40%; left:20%;"></div>
-        <div class="flow-line" style="width:35%; top:60%; left:35%;"></div>
-        <div class="flow-line" style="width:45%; top:80%; left:25%;"></div>
-        <div class="diagram-icon">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
-            <rect x="2" y="2" width="8" height="8" rx="2"></rect>
-            <rect x="14" y="2" width="8" height="8" rx="2"></rect>
-            <rect x="2" y="14" width="8" height="8" rx="2"></rect>
-            <rect x="14" y="14" width="8" height="8" rx="2"></rect>
-          </svg>
-          <span class="label">Interactive Diagram</span>
-        </div>
+        <canvas id="multiagent-canvas"></canvas>
+        <div class="fpo-overlay">FPO</div>
       </div>
       <div class="diagram-description">
         <div class="diagram-title">Multi-Agent Coordination: Parallel Stacks on a Shared Repository</div>
         <div class="diagram-spec">
-          <strong>Animated top-down repository map.</strong> The <code>main</code> branch runs as a horizontal trunk. Multiple stacks branch upward like coral growths, each color-coded to an "agent" (with a small robot avatar). Agents work simultaneously — commits appear in real-time across all stacks.
-          <br><br>
-          A <strong>file heatmap overlay</strong> highlights which files are being touched by each agent. When two agents touch the same file, a yellow warning glow pulses. A "merge sequence" animation shows the optimal order: stacks with no conflicts merge first, then conflicting stacks rebase and merge.
-          <br><br>
-          <strong>Interaction:</strong> Play/pause the simulation. Click on any stack to see its PR list. Drag agents to different tasks and watch the repository structure reorganize. Toggle the heatmap overlay on/off.
+          <strong>Animated repository map</strong> — three agents push commits to parallel stacks branching from main.
         </div>
-        <span class="diagram-tag tag-interactive">Interactive · Simulation</span>
-        <span class="diagram-tag tag-animated">Animated · Real-time</span>
+        <span class="diagram-tag tag-animated">Animated · Parallel Simulation</span>
       </div>
     </div>
 
     <div class="callout key-point">
-      <div class="callout-header">🔑 Design Principle</div>
+      <div class="callout-header">Design Principle</div>
       <p>The best Git workflows for agents aren't about controlling the agent — they're about giving the agent <strong>mechanical sympathy</strong> for how Git works. Stacks provide that sympathy by mapping cleanly to linear dependency chains, which is how agents naturally decompose tasks.</p>
     </div>
 
@@ -1104,29 +1039,17 @@
     <p>Stacked PRs solve this by making the agent's reasoning visible in the structure of the stack itself. Each layer is a <em>decision</em>: "first I built the data model, then I built the routes on top of it, then I added the tests." The stack <strong>is</strong> the explanation.</p>
 
     <!-- DIAGRAM 6: Review Experience Comparison -->
-    <div class="diagram">
+    <div class="diagram" id="viz-review">
       <div class="diagram-canvas">
-        <div class="flow-line" style="width:55%; top:30%; left:15%;"></div>
-        <div class="flow-line" style="width:45%; top:60%; left:25%;"></div>
-        <div class="diagram-icon">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
-            <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path>
-            <circle cx="12" cy="12" r="3"></circle>
-          </svg>
-          <span class="label">Interactive Diagram</span>
-        </div>
+        <canvas id="review-canvas"></canvas>
+        <div class="fpo-overlay">FPO</div>
       </div>
       <div class="diagram-description">
         <div class="diagram-title">The Review Experience: Monolith PR vs. Stacked PRs</div>
         <div class="diagram-spec">
-          <strong>Side-by-side scrolling mock of a PR review interface.</strong> Left side: a monolith PR with 847 lines changed across 12 files. The diff is a wall of green and red. A "cognitive load" meter fills to the top and turns red. A simulated reviewer's cursor scrolls frantically, with thought bubbles: "wait, why did this change?", "is this related to the auth work?"
-          <br><br>
-          Right side: the same 847 lines split across 4 stacked PRs. Each PR has its own focused diff (180-250 lines). The cognitive load meter stays comfortably in the green. Thought bubbles now read: "okay, this is just the data model", "this layer only adds routes." The GitHub stack navigator UI is visible in the header, showing progress through the stack.
-          <br><br>
-          <strong>Interaction:</strong> Scroll through both reviews simultaneously. Click on stack layers to jump between PRs. A "time to review" counter runs on both sides — the stacked version completes faster.
+          <strong>Side-by-side comparison</strong> — one massive PR vs. four focused, reviewable layers.
         </div>
-        <span class="diagram-tag tag-scroll">Scroll-Driven · Parallel Mockup</span>
-        <span class="diagram-tag tag-interactive">Interactive · Click to Navigate</span>
+        <span class="diagram-tag tag-animated">Animated · Bar Comparison</span>
       </div>
     </div>
 
@@ -1148,7 +1071,7 @@
     <p>Stacked PRs — and specifically <code>gh stack</code> — deliver all four. They aren't a new idea, but they're an idea whose time has come. The agentic era doesn't just make stacked PRs useful; it makes them <strong>necessary</strong>.</p>
 
     <div class="callout key-point">
-      <div class="callout-header">🚀 Getting Started</div>
+      <div class="callout-header">Getting Started</div>
       <p>Install the <code>gh stack</code> CLI extension, teach your agent to use it with <code>gh skill install github/gh-stack</code>, and start breaking those monolith PRs into reviewable stacks. Your future self — and your future agents — will thank you.</p>
     </div>
 
@@ -1219,7 +1142,7 @@
     </div>
 
     <div class="callout warning">
-      <div class="callout-header">⚠️ The Real Cost</div>
+      <div class="callout-header">The Real Cost</div>
       <p>Big PRs don't just get worse reviews — they get <strong>slower</strong> reviews. Every day a PR sits open is a day its branches diverge further from main, accumulating merge conflicts and blocking downstream work.</p>
     </div>
 
@@ -1357,7 +1280,7 @@
     </div>
 
     <div class="callout insight">
-      <div class="callout-header">💡 Merge Queue Integration</div>
+      <div class="callout-header">Merge Queue Integration</div>
       <p>Each layer can go through your merge queue independently. Want to merge the bottom 3 layers that are approved while layer 4 is still in review? Go for it. The stack handles the retargeting automatically.</p>
     </div>
 
@@ -1523,7 +1446,7 @@
     </div>
 
     <div class="callout key-point">
-      <div class="callout-header">🎯 The Bottom Line</div>
+      <div class="callout-header">The Bottom Line</div>
       <p>Stacked PRs aren't about adding process — they're about <strong>removing friction</strong>. Smaller PRs are faster to review, easier to understand, less likely to conflict, and quicker to merge. Stacks give you small PRs without losing the ability to ship big features. That's the whole pitch.</p>
     </div>
 
@@ -1585,77 +1508,682 @@ diagrams.forEach(d => {
 });
 
 // ═══════════════════════════════════════════════════════
-// STACK LIFECYCLE — Animated Git Graph (Canvas 2D)
+// SHARED CANVAS UTILITIES
 // ═══════════════════════════════════════════════════════
-(function() {
-  const P = {
-    blue: '#58a6ff', green: '#3fb950', yellow: '#d29922',
-    sky: '#79c0ff', muted: '#8b949e', border: '#30363d',
-    pink: '#f778ba', bg: '#010409'
-  };
+const P = {
+  blue: '#58a6ff', green: '#3fb950', yellow: '#d29922',
+  red: '#f85149', sky: '#79c0ff', muted: '#8b949e',
+  border: '#30363d', pink: '#f778ba', bg: '#010409',
+  fg: '#e6edf3', white: '#ffffff'
+};
+function hex(c, a) {
+  const r = parseInt(c.slice(1,3),16);
+  const g = parseInt(c.slice(3,5),16);
+  const b = parseInt(c.slice(5,7),16);
+  return `rgba(${r},${g},${b},${a})`;
+}
+function ease(t) { return t < 0.5 ? 2*t*t : -1+(4-2*t)*t; }
+function clamp01(t) { return Math.max(0, Math.min(1, t)); }
 
-  function hex(c, a) {
-    const r = parseInt(c.slice(1,3),16);
-    const g = parseInt(c.slice(3,5),16);
-    const b = parseInt(c.slice(5,7),16);
-    return `rgba(${r},${g},${b},${a})`;
-  }
-
-  const el = document.getElementById('viz-lifecycle');
-  if (!el) return;
-  const canvas = document.getElementById('lifecycle-canvas');
-  if (!canvas) return;
+function setupCanvas(vizId, canvasId) {
+  const el = document.getElementById(vizId);
+  if (!el) return null;
+  const canvas = document.getElementById(canvasId);
+  if (!canvas) return null;
   const area = canvas.parentElement;
-
+  let ctx, w, h;
   function resize() {
     const rect = area.getBoundingClientRect();
     const dpr = window.devicePixelRatio || 1;
     canvas.width = rect.width * dpr;
     canvas.height = rect.height * dpr;
-    const ctx = canvas.getContext('2d');
+    ctx = canvas.getContext('2d');
     ctx.scale(dpr, dpr);
-    return { ctx, w: rect.width, h: rect.height };
+    w = rect.width; h = rect.height;
   }
-
-  let { ctx, w, h } = resize();
-  window.addEventListener('resize', () => { ({ ctx, w, h } = resize()); });
-
-  let visible = false;
-  let startTime = null;
-  const visObs = new IntersectionObserver(([e]) => {
+  resize();
+  window.addEventListener('resize', resize);
+  let visible = false, startTime = null;
+  const obs = new IntersectionObserver(([e]) => {
     visible = e.isIntersecting;
     if (visible && !startTime) startTime = performance.now();
   }, { threshold: 0.1 });
-  visObs.observe(el);
-
-  // Drawing helpers
-  function dot(x, y, r, color, glow) {
-    if (glow) {
-      ctx.beginPath();
-      ctx.arc(x, y, r + glow, 0, Math.PI * 2);
-      ctx.fillStyle = hex(color, 0.15);
-      ctx.fill();
+  obs.observe(el);
+  return {
+    get ctx() { return ctx; }, get w() { return w; }, get h() { return h; },
+    isVisible() { return visible; },
+    elapsed() { return startTime ? (performance.now() - startTime) / 1000 : 0; },
+    run(drawFn) {
+      (function loop() { if (visible && startTime) drawFn(); requestAnimationFrame(loop); })();
     }
-    ctx.beginPath();
-    ctx.arc(x, y, r, 0, Math.PI * 2);
-    ctx.fillStyle = color;
-    ctx.fill();
-  }
+  };
+}
 
-  function ln(x1, y1, x2, y2, color, width) {
+function dot(ctx, x, y, r, color, glow) {
+  if (glow) {
+    ctx.beginPath(); ctx.arc(x, y, r + glow, 0, Math.PI * 2);
+    ctx.fillStyle = hex(color, 0.15); ctx.fill();
+  }
+  ctx.beginPath(); ctx.arc(x, y, r, 0, Math.PI * 2);
+  ctx.fillStyle = color; ctx.fill();
+}
+
+function roundRect(ctx, x, y, w, h, r) {
+  ctx.beginPath(); ctx.roundRect(x, y, w, h, r);
+}
+
+// ═══════════════════════════════════════════════════════
+// VIZ 1: COMMIT VELOCITY — Two-lane timeline
+// ═══════════════════════════════════════════════════════
+(function() {
+  const s = setupCanvas('viz-velocity', 'velocity-canvas');
+  if (!s) return;
+
+  // Pre-generate human commits: bursty pattern
+  const humanCommits = [];
+  const burstStarts = [0.5, 1.8, 4.0, 6.5, 9.0, 12.0];
+  burstStarts.forEach(bs => {
+    const count = 2 + Math.floor(Math.random() * 4);
+    for (let i = 0; i < count; i++) humanCommits.push(bs + i * 0.15 + Math.random() * 0.08);
+  });
+
+  // Agent commits: steady cadence
+  const agentCommits = [];
+  for (let t = 0.3; t < 14; t += 0.32 + Math.random() * 0.1) agentCommits.push(t);
+
+  const totalTime = 14;
+
+  s.run(() => {
+    const { ctx, w, h } = s;
+    const t = s.elapsed();
+    ctx.clearRect(0, 0, w, h);
+
+    const padL = 100, padR = 30, padT = 36, padB = 30;
+    const laneH = (h - padT - padB) / 2;
+    const timeW = w - padL - padR;
+    const progress = clamp01(t / 8) * totalTime;
+
+    // Labels
+    ctx.font = '600 11px system-ui, sans-serif';
+    ctx.fillStyle = P.muted;
+    ctx.textAlign = 'right';
+    ctx.fillText('Human only', padL - 14, padT + laneH * 0.5 + 4);
+    ctx.fillText('Human + Agent', padL - 14, padT + laneH * 1.5 + 4);
+    ctx.textAlign = 'left';
+
+    // Divider
     ctx.beginPath();
-    ctx.moveTo(x1, y1);
-    ctx.lineTo(x2, y2);
-    ctx.strokeStyle = color;
-    ctx.lineWidth = width || 2;
+    ctx.moveTo(padL, padT + laneH);
+    ctx.lineTo(w - padR, padT + laneH);
+    ctx.strokeStyle = hex(P.border, 0.5);
+    ctx.lineWidth = 1;
     ctx.stroke();
-  }
 
-  // Easing
-  function ease(t) { return t < 0.5 ? 2*t*t : -1+(4-2*t)*t; }
-  function clamp01(t) { return Math.max(0, Math.min(1, t)); }
+    // Timeline axis
+    ctx.beginPath();
+    ctx.moveTo(padL, h - padB);
+    ctx.lineTo(w - padR, h - padB);
+    ctx.strokeStyle = hex(P.muted, 0.3);
+    ctx.stroke();
 
-  // Layer definitions
+    // Day markers
+    ctx.font = '400 9px system-ui, sans-serif';
+    ctx.fillStyle = hex(P.muted, 0.5);
+    const days = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'];
+    days.forEach((d, i) => {
+      const dx = padL + (i / 7) * timeW;
+      ctx.fillText(d, dx, h - padB + 14);
+      ctx.beginPath();
+      ctx.moveTo(dx, padT); ctx.lineTo(dx, h - padB);
+      ctx.strokeStyle = hex(P.border, 0.15);
+      ctx.stroke();
+    });
+
+    // Draw human commits (top lane)
+    let hCount = 0;
+    humanCommits.forEach(ct => {
+      if (ct > progress) return;
+      hCount++;
+      const x = padL + (ct / totalTime) * timeW;
+      const y = padT + laneH * 0.5;
+      const age = (progress - ct) / totalTime;
+      const alpha = 0.4 + 0.6 * clamp01(age * 5);
+      dot(ctx, x, y + (Math.random() - 0.5) * 8, 3.5, hex(P.blue, alpha), 0);
+    });
+
+    // Draw agent commits (bottom lane - both human + agent)
+    let aCount = 0;
+    // Agent's human commits
+    humanCommits.forEach(ct => {
+      if (ct > progress) return;
+      const x = padL + (ct / totalTime) * timeW;
+      const y = padT + laneH * 1.3;
+      const age = (progress - ct) / totalTime;
+      const alpha = 0.4 + 0.6 * clamp01(age * 5);
+      dot(ctx, x, y, 3.5, hex(P.blue, alpha), 0);
+    });
+    agentCommits.forEach(ct => {
+      if (ct > progress) return;
+      aCount++;
+      const x = padL + (ct / totalTime) * timeW;
+      const y = padT + laneH * 1.65;
+      const age = (progress - ct) / totalTime;
+      const alpha = 0.3 + 0.7 * clamp01(age * 5);
+      dot(ctx, x, y, 3, hex(P.green, alpha), 0);
+    });
+
+    // Counters
+    ctx.font = '600 12px system-ui, sans-serif';
+    ctx.fillStyle = P.muted;
+    ctx.textAlign = 'right';
+    ctx.fillText(`${hCount} commits`, w - padR, padT + 14);
+    ctx.fillStyle = P.green;
+    ctx.fillText(`${hCount + aCount} commits`, w - padR, padT + laneH + 14);
+    ctx.textAlign = 'left';
+  });
+})();
+
+// ═══════════════════════════════════════════════════════
+// VIZ 2: TASK DECOMPOSITION — Monolith splits into stack
+// ═══════════════════════════════════════════════════════
+(function() {
+  const s = setupCanvas('viz-decomp', 'decomp-canvas');
+  if (!s) return;
+
+  const layers = [
+    { label: 'auth-model',      color: P.blue,   lines: '+142' },
+    { label: 'auth-routes',     color: P.green,  lines: '+203' },
+    { label: 'auth-middleware',  color: P.sky,    lines: '+186' },
+    { label: 'auth-tests',      color: P.yellow, lines: '+316' }
+  ];
+
+  s.run(() => {
+    const { ctx, w, h } = s;
+    const t = s.elapsed();
+    ctx.clearRect(0, 0, w, h);
+
+    const cx = w / 2, cy = h / 2;
+    const cardW = 200, cardH = 50, gap = 8;
+    const stackH = layers.length * (cardH + gap);
+
+    // Phase 1: Monolith card (0-2s)
+    const monoAlpha = clamp01(1 - (t - 1.5) * 2);
+    const splitProg = ease(clamp01((t - 2.0) / 1.5));
+
+    if (monoAlpha > 0 && splitProg < 1) {
+      const mw = cardW * 1.3, mh = cardH * 2.2;
+      const mx = cx - mw / 2, my = cy - mh / 2;
+      const scale = 1 + splitProg * 0.1;
+
+      ctx.save();
+      ctx.globalAlpha = monoAlpha * (1 - splitProg);
+      ctx.translate(cx, cy);
+      ctx.scale(scale, scale);
+      ctx.translate(-cx, -cy);
+      roundRect(ctx, mx, my, mw, mh, 8);
+      ctx.fillStyle = hex(P.red, 0.08);
+      ctx.fill();
+      ctx.strokeStyle = hex(P.red, 0.4);
+      ctx.lineWidth = 1.5;
+      ctx.stroke();
+
+      ctx.font = '600 13px system-ui, sans-serif';
+      ctx.fillStyle = hex(P.fg, 1);
+      ctx.textAlign = 'center';
+      ctx.fillText('Add user authentication', cx, cy - 8);
+
+      ctx.font = '500 11px system-ui, sans-serif';
+      ctx.fillStyle = hex(P.red, 0.8);
+      ctx.fillText('847 lines changed · 12 files', cx, cy + 14);
+      ctx.textAlign = 'left';
+      ctx.restore();
+    }
+
+    // Phase 2: Stacked layers (2s+)
+    if (splitProg > 0) {
+      const startY = cy - stackH / 2;
+
+      layers.forEach((layer, i) => {
+        const delay = i * 0.15;
+        const layerProg = ease(clamp01((splitProg - delay) / (1 - delay * 0.8)));
+        if (layerProg <= 0) return;
+
+        const lx = cx - cardW / 2;
+        const ly = startY + i * (cardH + gap);
+
+        // Card
+        ctx.globalAlpha = layerProg;
+        roundRect(ctx, lx, ly, cardW, cardH, 6);
+        ctx.fillStyle = hex(layer.color, 0.06);
+        ctx.fill();
+        ctx.strokeStyle = hex(layer.color, 0.3);
+        ctx.lineWidth = 1;
+        ctx.stroke();
+
+        // Color bar on left
+        roundRect(ctx, lx, ly, 4, cardH, [3, 0, 0, 3]);
+        ctx.fillStyle = hex(layer.color, 0.7);
+        ctx.fill();
+
+        // Text
+        ctx.font = '600 11px system-ui, sans-serif';
+        ctx.fillStyle = hex(P.fg, layerProg);
+        ctx.fillText(layer.label, lx + 14, ly + 22);
+        ctx.font = '400 10px system-ui, sans-serif';
+        ctx.fillStyle = hex(layer.color, layerProg * 0.7);
+        ctx.fillText(layer.lines, lx + 14, ly + 38);
+
+        // Arrow connecting to next
+        if (i < layers.length - 1 && layerProg > 0.5) {
+          const arrowAlpha = clamp01((layerProg - 0.5) * 2);
+          const ay = ly + cardH + gap / 2;
+          ctx.beginPath();
+          ctx.moveTo(cx - 4, ay - 2); ctx.lineTo(cx, ay + 2); ctx.lineTo(cx + 4, ay - 2);
+          ctx.strokeStyle = hex(P.muted, arrowAlpha * 0.4);
+          ctx.lineWidth = 1.5;
+          ctx.stroke();
+        }
+
+        ctx.globalAlpha = 1;
+      });
+
+      // Stack label
+      if (splitProg > 0.8) {
+        const labelAlpha = clamp01((splitProg - 0.8) * 5);
+        ctx.font = '500 10px system-ui, sans-serif';
+        ctx.fillStyle = hex(P.muted, labelAlpha * 0.6);
+        ctx.textAlign = 'center';
+        ctx.fillText('4 reviewable layers', cx, startY + stackH + 20);
+        ctx.textAlign = 'left';
+      }
+    }
+  });
+})();
+
+// ═══════════════════════════════════════════════════════
+// VIZ 3: CONFLICT SURFACE — Split-screen comparison
+// ═══════════════════════════════════════════════════════
+(function() {
+  const s = setupCanvas('viz-conflict', 'conflict-canvas');
+  if (!s) return;
+
+  const branchColors = [P.blue, P.green, P.yellow];
+
+  s.run(() => {
+    const { ctx, w, h } = s;
+    const t = s.elapsed();
+    ctx.clearRect(0, 0, w, h);
+
+    const mid = w / 2;
+    const mainY = h * 0.78;
+    const pad = 40;
+    const prog = clamp01(t / 6);
+
+    // Divider line
+    ctx.beginPath();
+    ctx.moveTo(mid, 24); ctx.lineTo(mid, h - 16);
+    ctx.strokeStyle = hex(P.border, 0.4);
+    ctx.lineWidth = 1;
+    ctx.setLineDash([4, 4]);
+    ctx.stroke();
+    ctx.setLineDash([]);
+
+    // Panel labels
+    ctx.font = '600 10px system-ui, sans-serif';
+    ctx.fillStyle = hex(P.muted, 0.7);
+    ctx.textAlign = 'center';
+    ctx.fillText('PARALLEL BRANCHES', mid / 2, 18);
+    ctx.fillText('STACKED PRs', mid + mid / 2, 18);
+    ctx.textAlign = 'left';
+
+    // ── LEFT: Parallel branches with conflicts ──
+    const leftMainX1 = pad, leftMainX2 = mid - pad;
+    ctx.beginPath();
+    ctx.moveTo(leftMainX1, mainY); ctx.lineTo(leftMainX2, mainY);
+    ctx.strokeStyle = hex(P.muted, 0.3);
+    ctx.lineWidth = 2;
+    ctx.stroke();
+    dot(ctx, leftMainX1, mainY, 4, P.muted, 0);
+    ctx.font = '500 9px system-ui, sans-serif';
+    ctx.fillStyle = hex(P.muted, 0.6);
+    ctx.fillText('main', leftMainX1, mainY + 16);
+
+    const leftW = leftMainX2 - leftMainX1;
+    branchColors.forEach((color, i) => {
+      const forkX = leftMainX1 + leftW * 0.15;
+      const branchY = mainY - 36 - i * 40;
+      const branchProg = ease(clamp01((prog * 6 - 0.5 - i * 0.3) * 0.8));
+      if (branchProg <= 0) return;
+
+      // Fork line
+      ctx.beginPath();
+      ctx.moveTo(forkX, mainY);
+      ctx.bezierCurveTo(forkX, mainY - 15, forkX + 10, branchY + 10, forkX + 20, branchY);
+      ctx.strokeStyle = hex(color, 0.4 * branchProg);
+      ctx.lineWidth = 1.5;
+      ctx.stroke();
+
+      // Branch line
+      const endX = forkX + 20 + leftW * 0.55 * branchProg;
+      ctx.beginPath();
+      ctx.moveTo(forkX + 20, branchY); ctx.lineTo(endX, branchY);
+      ctx.strokeStyle = hex(color, 0.35 * branchProg);
+      ctx.stroke();
+
+      // Commits
+      const commits = 3;
+      for (let c = 0; c < commits; c++) {
+        const cx = forkX + 30 + c * 24;
+        const cProg = ease(clamp01((prog * 6 - 1 - i * 0.3 - c * 0.2) * 2));
+        if (cProg > 0) dot(ctx, cx, branchY, 3.5 * cProg, color, 0);
+      }
+    });
+
+    // Conflict zone (overlapping red glow)
+    if (prog > 0.4) {
+      const conflictAlpha = clamp01((prog - 0.4) * 2) * (0.5 + 0.15 * Math.sin(t * 3));
+      const conflictX = leftMainX1 + leftW * 0.3;
+      const conflictY = mainY - 80;
+      const grad = ctx.createRadialGradient(conflictX, conflictY, 5, conflictX, conflictY, 60);
+      grad.addColorStop(0, hex(P.red, conflictAlpha * 0.3));
+      grad.addColorStop(1, hex(P.red, 0));
+      ctx.fillStyle = grad;
+      ctx.fillRect(leftMainX1, mainY - 160, leftW, 140);
+
+      ctx.font = '600 9px system-ui, sans-serif';
+      ctx.fillStyle = hex(P.red, conflictAlpha);
+      ctx.textAlign = 'center';
+      ctx.fillText('✕ conflicts', conflictX + 30, conflictY + 50);
+      ctx.textAlign = 'left';
+    }
+
+    // ── RIGHT: Stacked PRs (linear, no conflicts) ──
+    const rightMainX1 = mid + pad, rightMainX2 = w - pad;
+    ctx.beginPath();
+    ctx.moveTo(rightMainX1, mainY); ctx.lineTo(rightMainX2, mainY);
+    ctx.strokeStyle = hex(P.muted, 0.3);
+    ctx.lineWidth = 2;
+    ctx.stroke();
+    dot(ctx, rightMainX1, mainY, 4, P.muted, 0);
+    ctx.font = '500 9px system-ui, sans-serif';
+    ctx.fillStyle = hex(P.muted, 0.6);
+    ctx.fillText('main', rightMainX1, mainY + 16);
+
+    const rightW = rightMainX2 - rightMainX1;
+    branchColors.forEach((color, i) => {
+      const forkX = rightMainX1 + rightW * (0.15 + i * 0.22);
+      const branchY = mainY - 36 - i * 40;
+      const branchProg = ease(clamp01((prog * 6 - 0.5 - i * 0.5) * 0.7));
+      if (branchProg <= 0) return;
+
+      // Fork from previous layer (or main)
+      const prevY = i === 0 ? mainY : mainY - 36 - (i - 1) * 40;
+      const prevX = i === 0 ? forkX : forkX - rightW * 0.05;
+      ctx.beginPath();
+      ctx.moveTo(prevX, prevY);
+      ctx.bezierCurveTo(prevX, prevY - 12, forkX + 5, branchY + 10, forkX + 15, branchY);
+      ctx.strokeStyle = hex(color, 0.4 * branchProg);
+      ctx.lineWidth = 1.5;
+      ctx.stroke();
+
+      // Branch
+      const endX = forkX + 15 + rightW * 0.15 * branchProg;
+      ctx.beginPath();
+      ctx.moveTo(forkX + 15, branchY); ctx.lineTo(endX, branchY);
+      ctx.strokeStyle = hex(color, 0.35 * branchProg);
+      ctx.stroke();
+
+      for (let c = 0; c < 2; c++) {
+        const cx = forkX + 22 + c * 20;
+        const cProg = ease(clamp01((prog * 6 - 1 - i * 0.5 - c * 0.2) * 2));
+        if (cProg > 0) dot(ctx, cx, branchY, 3.5 * cProg, color, 0);
+      }
+    });
+
+    // Clean merge indicator
+    if (prog > 0.6) {
+      const mergeAlpha = clamp01((prog - 0.6) * 2.5);
+      ctx.font = '600 9px system-ui, sans-serif';
+      ctx.fillStyle = hex(P.green, mergeAlpha);
+      ctx.textAlign = 'center';
+      ctx.fillText('✓ clean merge', mid + mid / 2, mainY - 140);
+      ctx.textAlign = 'left';
+    }
+  });
+})();
+
+// ═══════════════════════════════════════════════════════
+// VIZ 4: STACK LIFECYCLE — (already exists above)
+// ═══════════════════════════════════════════════════════
+
+// ═══════════════════════════════════════════════════════
+// VIZ 5: MULTI-AGENT — Parallel stacks with flowing particles
+// ═══════════════════════════════════════════════════════
+(function() {
+  const s = setupCanvas('viz-multiagent', 'multiagent-canvas');
+  if (!s) return;
+
+  const agents = [
+    { label: 'Agent A · auth', color: P.blue, layers: 3, offset: 0.15 },
+    { label: 'Agent B · search', color: P.green, layers: 2, offset: 0.42 },
+    { label: 'Agent C · billing', color: P.yellow, layers: 3, offset: 0.68 }
+  ];
+
+  // Pre-generate particles for each agent
+  const particles = agents.map(a => {
+    const pts = [];
+    for (let i = 0; i < 12; i++) pts.push({ phase: Math.random() * Math.PI * 2, speed: 0.6 + Math.random() * 0.8 });
+    return pts;
+  });
+
+  s.run(() => {
+    const { ctx, w, h } = s;
+    const t = s.elapsed();
+    ctx.clearRect(0, 0, w, h);
+
+    const mainY = h * 0.85;
+    const padL = 40, padR = 40;
+    const usableW = w - padL - padR;
+    const prog = clamp01(t / 5);
+
+    // Main branch
+    const mainEndX = padL + usableW * ease(clamp01(prog * 1.5));
+    ctx.beginPath();
+    ctx.moveTo(padL, mainY); ctx.lineTo(mainEndX, mainY);
+    ctx.strokeStyle = hex(P.muted, 0.35);
+    ctx.lineWidth = 2;
+    ctx.stroke();
+    ctx.font = '500 10px system-ui, sans-serif';
+    ctx.fillStyle = hex(P.muted, 0.5);
+    ctx.fillText('main', padL, mainY + 16);
+
+    // Agent stacks
+    agents.forEach((agent, ai) => {
+      const stackX = padL + usableW * agent.offset;
+      const stackW = usableW * 0.2;
+      const agentDelay = 0.8 + ai * 0.5;
+      const agentProg = ease(clamp01((t - agentDelay) * 0.6));
+      if (agentProg <= 0) return;
+
+      // Agent label
+      ctx.font = '500 9px system-ui, sans-serif';
+      ctx.fillStyle = hex(agent.color, agentProg * 0.7);
+      ctx.fillText(agent.label, stackX + 4, mainY - agent.layers * 42 - 14);
+
+      // Fork point
+      dot(ctx, stackX + stackW * 0.3, mainY, 4 * agentProg, agent.color, 2 * agentProg);
+
+      // Layers
+      for (let li = 0; li < agent.layers; li++) {
+        const layerDelay = agentDelay + 0.5 + li * 0.6;
+        const layerProg = ease(clamp01((t - layerDelay) * 0.8));
+        if (layerProg <= 0) continue;
+
+        const ly = mainY - 36 - li * 42;
+
+        // Vertical connection to previous
+        const prevY = li === 0 ? mainY : mainY - 36 - (li - 1) * 42;
+        ctx.beginPath();
+        ctx.moveTo(stackX + stackW * 0.3, prevY);
+        ctx.lineTo(stackX + stackW * 0.3, ly + 6);
+        ctx.strokeStyle = hex(agent.color, 0.25 * layerProg);
+        ctx.lineWidth = 1.5;
+        ctx.stroke();
+
+        // Branch line
+        ctx.beginPath();
+        ctx.moveTo(stackX + stackW * 0.3, ly);
+        ctx.lineTo(stackX + stackW * 0.3 + stackW * 0.5 * layerProg, ly);
+        ctx.strokeStyle = hex(agent.color, 0.35 * layerProg);
+        ctx.lineWidth = 1.5;
+        ctx.stroke();
+
+        // Commits
+        for (let c = 0; c < 2; c++) {
+          const cx = stackX + stackW * 0.3 + 12 + c * 16;
+          const cProg = ease(clamp01((t - layerDelay - 0.3 - c * 0.25) * 2));
+          if (cProg > 0) dot(ctx, cx, ly, 3 * cProg, agent.color, 0);
+        }
+      }
+
+      // Flowing particles along the stack
+      if (agentProg > 0.5) {
+        const pts = particles[ai];
+        pts.forEach(pt => {
+          const py = mainY - (agent.layers * 42 + 20) * ((Math.sin(t * pt.speed + pt.phase) + 1) / 2);
+          const px = stackX + stackW * 0.3 + (Math.cos(t * pt.speed * 0.7 + pt.phase) * 6);
+          ctx.beginPath();
+          ctx.arc(px, py, 1.5, 0, Math.PI * 2);
+          ctx.fillStyle = hex(agent.color, 0.15);
+          ctx.fill();
+        });
+      }
+    });
+  });
+})();
+
+// ═══════════════════════════════════════════════════════
+// VIZ 6: REVIEW EXPERIENCE — Monolith vs. Stacked bars
+// ═══════════════════════════════════════════════════════
+(function() {
+  const s = setupCanvas('viz-review', 'review-canvas');
+  if (!s) return;
+
+  const stackedPRs = [
+    { label: 'auth-model',     lines: 142, color: P.blue },
+    { label: 'auth-routes',    lines: 203, color: P.green },
+    { label: 'auth-middleware', lines: 186, color: P.sky },
+    { label: 'auth-tests',     lines: 316, color: P.yellow }
+  ];
+  const totalLines = stackedPRs.reduce((s, p) => s + p.lines, 0);
+
+  s.run(() => {
+    const { ctx, w, h } = s;
+    const t = s.elapsed();
+    ctx.clearRect(0, 0, w, h);
+
+    const mid = w / 2;
+    const padT = 50, padB = 40;
+    const barMaxH = h - padT - padB;
+    const barW = 60;
+    const prog = ease(clamp01(t / 3));
+
+    // Panel labels
+    ctx.font = '600 10px system-ui, sans-serif';
+    ctx.fillStyle = hex(P.muted, 0.7);
+    ctx.textAlign = 'center';
+    ctx.fillText('MONOLITH PR', mid * 0.45, 22);
+    ctx.fillText('STACKED PRs', mid + mid * 0.55, 22);
+
+    // ── LEFT: Monolith bar ──
+    const monoH = barMaxH * 0.88 * prog;
+    const monoX = mid * 0.45 - barW / 2;
+    const monoY = h - padB - monoH;
+
+    roundRect(ctx, monoX, monoY, barW, monoH, 4);
+    ctx.fillStyle = hex(P.red, 0.12);
+    ctx.fill();
+    ctx.strokeStyle = hex(P.red, 0.35);
+    ctx.lineWidth = 1;
+    ctx.stroke();
+
+    // Lines label
+    if (prog > 0.3) {
+      const labelAlpha = clamp01((prog - 0.3) * 3);
+      ctx.font = '700 13px system-ui, sans-serif';
+      ctx.fillStyle = hex(P.red, labelAlpha * 0.8);
+      ctx.textAlign = 'center';
+      ctx.fillText(`${totalLines}`, mid * 0.45, monoY - 10);
+      ctx.font = '400 9px system-ui, sans-serif';
+      ctx.fillStyle = hex(P.muted, labelAlpha * 0.6);
+      ctx.fillText('lines changed', mid * 0.45, monoY + 4);
+    }
+
+    // Danger indicator
+    if (prog > 0.6) {
+      const dangerProg = clamp01((prog - 0.6) * 2.5);
+      ctx.font = '500 10px system-ui, sans-serif';
+      ctx.fillStyle = hex(P.red, dangerProg * 0.7);
+      ctx.textAlign = 'center';
+      ctx.fillText('12 files · hard to review', mid * 0.45, h - padB + 18);
+    }
+
+    // ── RIGHT: Stacked bars ──
+    const rightCX = mid + mid * 0.55;
+    const stackBarW = 48;
+    const stackGap = 6;
+    const totalStackH = barMaxH * 0.88;
+
+    let runY = h - padB;
+    stackedPRs.forEach((pr, i) => {
+      const delay = 0.15 * i;
+      const barProg = ease(clamp01((prog - delay) / (1 - delay)));
+      if (barProg <= 0) return;
+
+      const barH = (pr.lines / totalLines) * totalStackH * barProg;
+      const bx = rightCX - stackBarW / 2;
+      const by = runY - barH;
+
+      roundRect(ctx, bx, by, stackBarW, barH, 3);
+      ctx.fillStyle = hex(pr.color, 0.1);
+      ctx.fill();
+      ctx.strokeStyle = hex(pr.color, 0.3);
+      ctx.lineWidth = 1;
+      ctx.stroke();
+
+      // Label
+      if (barProg > 0.5) {
+        const la = clamp01((barProg - 0.5) * 3);
+        ctx.font = '500 9px system-ui, sans-serif';
+        ctx.fillStyle = hex(pr.color, la * 0.8);
+        ctx.textAlign = 'left';
+        ctx.fillText(`${pr.label}`, bx + stackBarW + 10, by + barH / 2 + 3);
+        ctx.fillStyle = hex(P.muted, la * 0.5);
+        ctx.fillText(`+${pr.lines}`, bx + stackBarW + 10, by + barH / 2 + 15);
+      }
+
+      runY -= barH + stackGap;
+    });
+
+    // Green check
+    if (prog > 0.7) {
+      const checkAlpha = clamp01((prog - 0.7) * 3);
+      ctx.font = '500 10px system-ui, sans-serif';
+      ctx.fillStyle = hex(P.green, checkAlpha * 0.7);
+      ctx.textAlign = 'center';
+      ctx.fillText('4 focused reviews · easy to approve', rightCX, h - padB + 18);
+    }
+    ctx.textAlign = 'left';
+  });
+})();
+
+// ═══════════════════════════════════════════════════════
+// VIZ 4: STACK LIFECYCLE — Animated Git Graph
+// ═══════════════════════════════════════════════════════
+(function() {
+  const s = setupCanvas('viz-lifecycle', 'lifecycle-canvas');
+  if (!s) return;
+
   const layers = [
     { label: 'auth-model',      color: P.blue,   commits: 3 },
     { label: 'api-routes',      color: P.green,  commits: 2 },
@@ -1663,46 +2191,40 @@ diagrams.forEach(d => {
     { label: 'auth-tests',      color: P.yellow, commits: 3 }
   ];
 
-  function draw(t) {
+  s.run(() => {
+    const { ctx, w, h } = s;
+    const t = s.elapsed();
     ctx.clearRect(0, 0, w, h);
 
     const mainY = h * 0.82;
     const padL = 56, padR = 40;
     const usableW = w - padL - padR;
 
-    // ── Main branch ──────────────────────────────────
+    // Main branch
     const mainDraw = ease(clamp01(t * 0.8));
     const mainEndX = padL + usableW * mainDraw;
-
-    // Main line
     ctx.beginPath();
-    ctx.moveTo(padL, mainY);
-    ctx.lineTo(mainEndX, mainY);
+    ctx.moveTo(padL, mainY); ctx.lineTo(mainEndX, mainY);
     ctx.strokeStyle = hex(P.muted, 0.4);
     ctx.lineWidth = 2;
     ctx.stroke();
 
-    // Main initial commits
     const mainCommits = 3;
     const mainSpacing = usableW * 0.08;
     for (let i = 0; i < mainCommits; i++) {
       const cx = padL + 10 + i * mainSpacing;
-      const cDelay = 0.2 + i * 0.15;
-      const cProg = ease(clamp01((t - cDelay) * 3));
-      if (cProg > 0) {
-        dot(cx, mainY, 5 * cProg, P.muted, 3 * cProg);
-      }
+      const cProg = ease(clamp01((t - 0.2 - i * 0.15) * 3));
+      if (cProg > 0) dot(ctx, cx, mainY, 5 * cProg, P.muted, 3 * cProg);
     }
 
-    // Label
     if (t > 0.3) {
-      const labelAlpha = clamp01((t - 0.3) * 3);
-      ctx.font = `600 11px system-ui, sans-serif`;
-      ctx.fillStyle = hex(P.muted, labelAlpha);
+      const la = clamp01((t - 0.3) * 3);
+      ctx.font = '600 11px system-ui, sans-serif';
+      ctx.fillStyle = hex(P.muted, la);
       ctx.fillText('main', padL - 2, mainY + 20);
     }
 
-    // ── Branches ─────────────────────────────────────
+    // Branches
     const branchZoneStart = padL + mainCommits * mainSpacing + mainSpacing * 0.5;
     const branchZoneW = usableW - (branchZoneStart - padL) - 20;
     const branchSpacing = branchZoneW / layers.length;
@@ -1712,120 +2234,78 @@ diagrams.forEach(d => {
       const branchY = mainY - 40 - i * (h * 0.14);
       const branchDelay = 1.0 + i * 0.7;
       const branchProg = ease(clamp01((t - branchDelay) * 0.7));
-
       if (branchProg <= 0) return;
 
-      // Fork point on main
-      dot(forkX, mainY, 4 * branchProg, layer.color, 2 * branchProg);
+      dot(ctx, forkX, mainY, 4 * branchProg, layer.color, 2 * branchProg);
 
-      // Curved branch line from main up to branch
       const curveEndX = forkX + 20;
       const curveEndY = mainY + (branchY - mainY) * branchProg;
-
       ctx.beginPath();
       ctx.moveTo(forkX, mainY);
-      ctx.bezierCurveTo(
-        forkX, mainY + (curveEndY - mainY) * 0.4,
-        forkX + 5, curveEndY + 12,
-        curveEndX, curveEndY
-      );
+      ctx.bezierCurveTo(forkX, mainY + (curveEndY - mainY) * 0.4, forkX + 5, curveEndY + 12, curveEndX, curveEndY);
       ctx.strokeStyle = hex(layer.color, 0.5 * branchProg);
       ctx.lineWidth = 2;
       ctx.stroke();
 
-      // Horizontal branch line
       const commitSpacing = 28;
       const hLineEnd = curveEndX + layer.commits * commitSpacing + 10;
       const hProg = ease(clamp01((t - branchDelay - 0.5) * 1.0));
-
       if (hProg > 0) {
         const hEndX = curveEndX + (hLineEnd - curveEndX) * hProg;
-        ln(curveEndX, curveEndY, hEndX, curveEndY, hex(layer.color, 0.4 * branchProg), 2);
+        ctx.beginPath(); ctx.moveTo(curveEndX, curveEndY); ctx.lineTo(hEndX, curveEndY);
+        ctx.strokeStyle = hex(layer.color, 0.4 * branchProg); ctx.lineWidth = 2; ctx.stroke();
       }
 
-      // Commits on branch
       for (let c = 0; c < layer.commits; c++) {
         const cx = curveEndX + 8 + c * commitSpacing;
-        const cDelay = branchDelay + 0.7 + c * 0.25;
-        const cProg = ease(clamp01((t - cDelay) * 2.5));
-        if (cProg > 0) {
-          dot(cx, curveEndY, 4.5 * cProg, layer.color, 3 * cProg);
-        }
+        const cProg = ease(clamp01((t - branchDelay - 0.7 - c * 0.25) * 2.5));
+        if (cProg > 0) dot(ctx, cx, curveEndY, 4.5 * cProg, layer.color, 3 * cProg);
       }
 
-      // Branch label
-      const labelDelay = branchDelay + 0.4;
-      const labelAlpha = clamp01((t - labelDelay) * 2);
+      const labelAlpha = clamp01((t - branchDelay - 0.4) * 2);
       if (labelAlpha > 0) {
-        ctx.font = `500 10px system-ui, sans-serif`;
+        ctx.font = '500 10px system-ui, sans-serif';
         ctx.fillStyle = hex(layer.color, labelAlpha * 0.8);
         ctx.fillText(layer.label, curveEndX + 2, curveEndY - 10);
       }
 
-      // PR badge (appears after all commits)
       const prDelay = branchDelay + 0.7 + layer.commits * 0.25 + 0.3;
       const prProg = ease(clamp01((t - prDelay) * 2));
       if (prProg > 0) {
-        const lastCommitX = curveEndX + 8 + (layer.commits - 1) * commitSpacing;
-        const badgeX = lastCommitX + 20;
+        const lastX = curveEndX + 8 + (layer.commits - 1) * commitSpacing;
+        const badgeX = lastX + 20;
         const badgeW = 48 * prProg;
-        const badgeH = 18;
-
-        ctx.beginPath();
-        ctx.roundRect(badgeX, curveEndY - badgeH / 2, badgeW, badgeH, 9);
-        ctx.fillStyle = hex(layer.color, 0.12 * prProg);
-        ctx.fill();
-        ctx.strokeStyle = hex(layer.color, 0.35 * prProg);
-        ctx.lineWidth = 1;
-        ctx.stroke();
-
+        roundRect(ctx, badgeX, curveEndY - 9, badgeW, 18, 9);
+        ctx.fillStyle = hex(layer.color, 0.12 * prProg); ctx.fill();
+        ctx.strokeStyle = hex(layer.color, 0.35 * prProg); ctx.lineWidth = 1; ctx.stroke();
         if (prProg > 0.6) {
-          ctx.font = `600 9px system-ui, sans-serif`;
+          ctx.font = '600 9px system-ui, sans-serif';
           ctx.fillStyle = hex(layer.color, (prProg - 0.6) * 2.5);
           ctx.fillText(`PR #${41 + i}`, badgeX + 6, curveEndY + 3);
         }
       }
     });
 
-    // ── Merge phase ──────────────────────────────────
-    // After all branches drawn, merge bottom layer
+    // Merge phase
     const mergeStart = 1.0 + layers.length * 0.7 + 3.0;
-    const mergeCycle = 8; // total seconds before restart
     const mergeT = t - mergeStart;
-
     if (mergeT > 0) {
-      const cycleT = mergeT % mergeCycle;
+      const cycleT = mergeT % 8;
       const mergedCount = Math.min(layers.length, Math.floor(cycleT / 1.5));
-
-      // Draw merge indicators on main
       for (let i = 0; i < mergedCount; i++) {
         const mx = branchZoneStart + i * branchSpacing + 50;
         const flashProg = clamp01((cycleT - i * 1.5) * 2);
         if (flashProg > 0) {
-          // Merge glow
-          ctx.beginPath();
-          ctx.arc(mx, mainY, 8, 0, Math.PI * 2);
-          ctx.fillStyle = hex(layers[i].color, 0.2 * flashProg);
-          ctx.fill();
-          dot(mx, mainY, 5, layers[i].color, 4);
-
-          // Check mark
-          ctx.font = `600 10px system-ui, sans-serif`;
+          ctx.beginPath(); ctx.arc(mx, mainY, 8, 0, Math.PI * 2);
+          ctx.fillStyle = hex(layers[i].color, 0.2 * flashProg); ctx.fill();
+          dot(ctx, mx, mainY, 5, layers[i].color, 4);
+          ctx.font = '600 10px system-ui, sans-serif';
           ctx.fillStyle = hex(P.green, flashProg);
           ctx.fillText('✓', mx - 4, mainY - 14);
         }
       }
     }
-  }
-
-  // Animation loop
-  (function loop() {
-    if (visible && startTime) {
-      const t = (performance.now() - startTime) / 1000;
-      draw(t);
-    }
-    requestAnimationFrame(loop);
-  })();
+  });
 })();
 </script>
 
