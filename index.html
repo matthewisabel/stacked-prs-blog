@@ -463,24 +463,37 @@
     justify-content: center;
     position: relative;
     overflow: hidden;
-  }
-
-  .diagram-canvas::before {
-    content: '';
-    position: absolute;
-    inset: 0;
     background-image:
       linear-gradient(var(--color-accent-subtle) 1px, transparent 1px),
       linear-gradient(90deg, var(--color-accent-subtle) 1px, transparent 1px);
     background-size: 32px 32px;
-    opacity: .3;
-    animation: gridPulse 5s ease-in-out infinite;
-  }
-  @keyframes gridPulse {
-    0%, 100% { opacity: .2; }
-    50%      { opacity: .4; }
+    background-position: center;
   }
 
+  /* Canvas fills its diagram-canvas parent */
+  .diagram-canvas canvas {
+    position: absolute;
+    top: 0; left: 0;
+    width: 100%; height: 100%;
+    display: block;
+  }
+
+  /* FPO watermark */
+  .fpo-overlay {
+    position: absolute;
+    top: 50%; left: 50%;
+    transform: translate(-50%, -50%);
+    font-family: var(--fontStack-sansSerif);
+    font-size: 72px;
+    font-weight: 800;
+    letter-spacing: .25em;
+    color: rgba(255,255,255,.05);
+    pointer-events: none;
+    z-index: 2;
+    user-select: none;
+  }
+
+  /* Floating placeholder icon */
   .diagram-icon {
     position: relative;
     z-index: 1;
@@ -1015,18 +1028,10 @@
 <span style="color:var(--color-success-fg)">gs submit</span>                    <span style="color:var(--fgColor-muted)"># Create the full stack of PRs</span></code></pre>
 
     <!-- DIAGRAM 4: Stack Lifecycle Animation -->
-    <div class="diagram">
+    <div class="diagram" id="viz-lifecycle">
       <div class="diagram-canvas">
-        <!-- Mini commit graph -->
-        <div class="commit-graph-mini">
-          <div class="commit-dot main"></div>
-          <div class="commit-dot main"></div>
-          <div class="commit-dot stack1"></div>
-          <div class="commit-dot stack1"></div>
-          <div class="commit-dot stack2"></div>
-          <div class="commit-dot stack3"></div>
-          <div class="commit-dot stack3"></div>
-        </div>
+        <canvas id="lifecycle-canvas"></canvas>
+        <div class="fpo-overlay">FPO</div>
       </div>
       <div class="diagram-description">
         <div class="diagram-title">Stack Lifecycle: Init → Build → Submit → Merge</div>
@@ -1578,6 +1583,250 @@ diagrams.forEach(d => {
   d.style.transition = 'opacity .4s ease, transform .4s ease';
   observer.observe(d);
 });
+
+// ═══════════════════════════════════════════════════════
+// STACK LIFECYCLE — Animated Git Graph (Canvas 2D)
+// ═══════════════════════════════════════════════════════
+(function() {
+  const P = {
+    blue: '#58a6ff', green: '#3fb950', yellow: '#d29922',
+    sky: '#79c0ff', muted: '#8b949e', border: '#30363d',
+    pink: '#f778ba', bg: '#010409'
+  };
+
+  function hex(c, a) {
+    const r = parseInt(c.slice(1,3),16);
+    const g = parseInt(c.slice(3,5),16);
+    const b = parseInt(c.slice(5,7),16);
+    return `rgba(${r},${g},${b},${a})`;
+  }
+
+  const el = document.getElementById('viz-lifecycle');
+  if (!el) return;
+  const canvas = document.getElementById('lifecycle-canvas');
+  if (!canvas) return;
+  const area = canvas.parentElement;
+
+  function resize() {
+    const rect = area.getBoundingClientRect();
+    const dpr = window.devicePixelRatio || 1;
+    canvas.width = rect.width * dpr;
+    canvas.height = rect.height * dpr;
+    const ctx = canvas.getContext('2d');
+    ctx.scale(dpr, dpr);
+    return { ctx, w: rect.width, h: rect.height };
+  }
+
+  let { ctx, w, h } = resize();
+  window.addEventListener('resize', () => { ({ ctx, w, h } = resize()); });
+
+  let visible = false;
+  let startTime = null;
+  const visObs = new IntersectionObserver(([e]) => {
+    visible = e.isIntersecting;
+    if (visible && !startTime) startTime = performance.now();
+  }, { threshold: 0.1 });
+  visObs.observe(el);
+
+  // Drawing helpers
+  function dot(x, y, r, color, glow) {
+    if (glow) {
+      ctx.beginPath();
+      ctx.arc(x, y, r + glow, 0, Math.PI * 2);
+      ctx.fillStyle = hex(color, 0.15);
+      ctx.fill();
+    }
+    ctx.beginPath();
+    ctx.arc(x, y, r, 0, Math.PI * 2);
+    ctx.fillStyle = color;
+    ctx.fill();
+  }
+
+  function ln(x1, y1, x2, y2, color, width) {
+    ctx.beginPath();
+    ctx.moveTo(x1, y1);
+    ctx.lineTo(x2, y2);
+    ctx.strokeStyle = color;
+    ctx.lineWidth = width || 2;
+    ctx.stroke();
+  }
+
+  // Easing
+  function ease(t) { return t < 0.5 ? 2*t*t : -1+(4-2*t)*t; }
+  function clamp01(t) { return Math.max(0, Math.min(1, t)); }
+
+  // Layer definitions
+  const layers = [
+    { label: 'auth-model',      color: P.blue,   commits: 3 },
+    { label: 'api-routes',      color: P.green,  commits: 2 },
+    { label: 'auth-middleware',  color: P.sky,    commits: 2 },
+    { label: 'auth-tests',      color: P.yellow, commits: 3 }
+  ];
+
+  function draw(t) {
+    ctx.clearRect(0, 0, w, h);
+
+    const mainY = h * 0.82;
+    const padL = 56, padR = 40;
+    const usableW = w - padL - padR;
+
+    // ── Main branch ──────────────────────────────────
+    const mainDraw = ease(clamp01(t * 0.8));
+    const mainEndX = padL + usableW * mainDraw;
+
+    // Main line
+    ctx.beginPath();
+    ctx.moveTo(padL, mainY);
+    ctx.lineTo(mainEndX, mainY);
+    ctx.strokeStyle = hex(P.muted, 0.4);
+    ctx.lineWidth = 2;
+    ctx.stroke();
+
+    // Main initial commits
+    const mainCommits = 3;
+    const mainSpacing = usableW * 0.08;
+    for (let i = 0; i < mainCommits; i++) {
+      const cx = padL + 10 + i * mainSpacing;
+      const cDelay = 0.2 + i * 0.15;
+      const cProg = ease(clamp01((t - cDelay) * 3));
+      if (cProg > 0) {
+        dot(cx, mainY, 5 * cProg, P.muted, 3 * cProg);
+      }
+    }
+
+    // Label
+    if (t > 0.3) {
+      const labelAlpha = clamp01((t - 0.3) * 3);
+      ctx.font = `600 11px system-ui, sans-serif`;
+      ctx.fillStyle = hex(P.muted, labelAlpha);
+      ctx.fillText('main', padL - 2, mainY + 20);
+    }
+
+    // ── Branches ─────────────────────────────────────
+    const branchZoneStart = padL + mainCommits * mainSpacing + mainSpacing * 0.5;
+    const branchZoneW = usableW - (branchZoneStart - padL) - 20;
+    const branchSpacing = branchZoneW / layers.length;
+
+    layers.forEach((layer, i) => {
+      const forkX = branchZoneStart + i * branchSpacing;
+      const branchY = mainY - 40 - i * (h * 0.14);
+      const branchDelay = 1.0 + i * 0.7;
+      const branchProg = ease(clamp01((t - branchDelay) * 0.7));
+
+      if (branchProg <= 0) return;
+
+      // Fork point on main
+      dot(forkX, mainY, 4 * branchProg, layer.color, 2 * branchProg);
+
+      // Curved branch line from main up to branch
+      const curveEndX = forkX + 20;
+      const curveEndY = mainY + (branchY - mainY) * branchProg;
+
+      ctx.beginPath();
+      ctx.moveTo(forkX, mainY);
+      ctx.bezierCurveTo(
+        forkX, mainY + (curveEndY - mainY) * 0.4,
+        forkX + 5, curveEndY + 12,
+        curveEndX, curveEndY
+      );
+      ctx.strokeStyle = hex(layer.color, 0.5 * branchProg);
+      ctx.lineWidth = 2;
+      ctx.stroke();
+
+      // Horizontal branch line
+      const commitSpacing = 28;
+      const hLineEnd = curveEndX + layer.commits * commitSpacing + 10;
+      const hProg = ease(clamp01((t - branchDelay - 0.5) * 1.0));
+
+      if (hProg > 0) {
+        const hEndX = curveEndX + (hLineEnd - curveEndX) * hProg;
+        ln(curveEndX, curveEndY, hEndX, curveEndY, hex(layer.color, 0.4 * branchProg), 2);
+      }
+
+      // Commits on branch
+      for (let c = 0; c < layer.commits; c++) {
+        const cx = curveEndX + 8 + c * commitSpacing;
+        const cDelay = branchDelay + 0.7 + c * 0.25;
+        const cProg = ease(clamp01((t - cDelay) * 2.5));
+        if (cProg > 0) {
+          dot(cx, curveEndY, 4.5 * cProg, layer.color, 3 * cProg);
+        }
+      }
+
+      // Branch label
+      const labelDelay = branchDelay + 0.4;
+      const labelAlpha = clamp01((t - labelDelay) * 2);
+      if (labelAlpha > 0) {
+        ctx.font = `500 10px system-ui, sans-serif`;
+        ctx.fillStyle = hex(layer.color, labelAlpha * 0.8);
+        ctx.fillText(layer.label, curveEndX + 2, curveEndY - 10);
+      }
+
+      // PR badge (appears after all commits)
+      const prDelay = branchDelay + 0.7 + layer.commits * 0.25 + 0.3;
+      const prProg = ease(clamp01((t - prDelay) * 2));
+      if (prProg > 0) {
+        const lastCommitX = curveEndX + 8 + (layer.commits - 1) * commitSpacing;
+        const badgeX = lastCommitX + 20;
+        const badgeW = 48 * prProg;
+        const badgeH = 18;
+
+        ctx.beginPath();
+        ctx.roundRect(badgeX, curveEndY - badgeH / 2, badgeW, badgeH, 9);
+        ctx.fillStyle = hex(layer.color, 0.12 * prProg);
+        ctx.fill();
+        ctx.strokeStyle = hex(layer.color, 0.35 * prProg);
+        ctx.lineWidth = 1;
+        ctx.stroke();
+
+        if (prProg > 0.6) {
+          ctx.font = `600 9px system-ui, sans-serif`;
+          ctx.fillStyle = hex(layer.color, (prProg - 0.6) * 2.5);
+          ctx.fillText(`PR #${41 + i}`, badgeX + 6, curveEndY + 3);
+        }
+      }
+    });
+
+    // ── Merge phase ──────────────────────────────────
+    // After all branches drawn, merge bottom layer
+    const mergeStart = 1.0 + layers.length * 0.7 + 3.0;
+    const mergeCycle = 8; // total seconds before restart
+    const mergeT = t - mergeStart;
+
+    if (mergeT > 0) {
+      const cycleT = mergeT % mergeCycle;
+      const mergedCount = Math.min(layers.length, Math.floor(cycleT / 1.5));
+
+      // Draw merge indicators on main
+      for (let i = 0; i < mergedCount; i++) {
+        const mx = branchZoneStart + i * branchSpacing + 50;
+        const flashProg = clamp01((cycleT - i * 1.5) * 2);
+        if (flashProg > 0) {
+          // Merge glow
+          ctx.beginPath();
+          ctx.arc(mx, mainY, 8, 0, Math.PI * 2);
+          ctx.fillStyle = hex(layers[i].color, 0.2 * flashProg);
+          ctx.fill();
+          dot(mx, mainY, 5, layers[i].color, 4);
+
+          // Check mark
+          ctx.font = `600 10px system-ui, sans-serif`;
+          ctx.fillStyle = hex(P.green, flashProg);
+          ctx.fillText('✓', mx - 4, mainY - 14);
+        }
+      }
+    }
+  }
+
+  // Animation loop
+  (function loop() {
+    if (visible && startTime) {
+      const t = (performance.now() - startTime) / 1000;
+      draw(t);
+    }
+    requestAnimationFrame(loop);
+  })();
+})();
 </script>
 
 </body>
