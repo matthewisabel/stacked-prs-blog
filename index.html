@@ -79,10 +79,7 @@
     --color-attention-emphasis:#9e6a03;
     --color-attention-subtle:rgba(187,128,9,.15);
 
-    /* ── Done (purple) ────────────────────────────── */
-    --color-done-fg:        #a371f7;
-    --color-done-emphasis:  #8957e5;
-    --color-done-subtle:    rgba(163,113,247,.15);
+    /* ── Done (purple) — kept for branch colors only ── */
 
     /* ── Open (green, same as success) ────────────── */
     --color-open-fg:        #3fb950;
@@ -359,7 +356,6 @@
   strong { color: var(--fgColor-onEmphasis); font-weight: 600; }
 
   em {
-    color: var(--color-done-fg);
     font-style: italic;
   }
 
@@ -516,7 +512,7 @@
     animation-duration: 4s;
   }
   .diagram-canvas .flow-line:nth-child(3) {
-    background: linear-gradient(90deg, transparent, var(--color-done-fg), transparent);
+    background: linear-gradient(90deg, transparent, var(--color-attention-fg), transparent);
     animation-delay: 2s;
     animation-duration: 3.5s;
   }
@@ -550,7 +546,7 @@
     line-height: 1.5;
   }
   .diagram-spec strong {
-    color: var(--color-done-fg);
+    color: var(--fgColor-default);
     font-weight: 600;
   }
 
@@ -576,8 +572,8 @@
     border-color: var(--color-success-muted);
   }
   .tag-scroll {
-    background: var(--color-done-subtle);
-    color: var(--color-done-fg);
+    background: var(--color-accent-subtle);
+    color: var(--color-accent-fg);
   }
 
   /* ═══════════════════════════════════════════════════════
@@ -688,8 +684,8 @@
   .commit-dot.main::after { background: var(--color-accent-fg); }
   .commit-dot.stack1 { border-color: var(--color-success-fg); }
   .commit-dot.stack1::after { background: var(--color-success-fg); }
-  .commit-dot.stack2 { border-color: var(--color-done-fg); }
-  .commit-dot.stack2::after { background: var(--color-done-fg); }
+  .commit-dot.stack2 { border-color: var(--color-attention-fg); }
+  .commit-dot.stack2::after { background: var(--color-attention-fg); }
   .commit-dot.stack3 { border-color: var(--color-attention-fg); }
   .commit-dot.stack3::after { background: var(--color-attention-fg); }
 
@@ -1288,7 +1284,7 @@
     <p>Let's say you're adding a new <code>/users</code> API endpoint with authentication. Here's how you might stack it:</p>
 
     <pre><code><span style="color:var(--color-success-fg)">Layer 1</span> · <span style="color:var(--fgColor-muted)">auth-model</span>       → User model + migration      <span style="color:var(--fgColor-muted)">(~120 lines)</span>
-<span style="color:var(--color-done-fg)">Layer 2</span> · <span style="color:var(--fgColor-muted)">auth-routes</span>       → CRUD endpoints              <span style="color:var(--fgColor-muted)">(~200 lines)</span>
+<span style="color:var(--color-accent-fg)">Layer 2</span> · <span style="color:var(--fgColor-muted)">auth-routes</span>       → CRUD endpoints              <span style="color:var(--fgColor-muted)">(~200 lines)</span>
 <span style="color:var(--color-accent-fg)">Layer 3</span> · <span style="color:var(--fgColor-muted)">auth-middleware</span>    → JWT middleware + guards     <span style="color:var(--fgColor-muted)">(~150 lines)</span>
 <span style="color:var(--color-attention-fg)">Layer 4</span> · <span style="color:var(--fgColor-muted)">auth-tests</span>        → Integration + unit tests    <span style="color:var(--fgColor-muted)">(~280 lines)</span></code></pre>
 
