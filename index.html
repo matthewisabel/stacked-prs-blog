@@ -1,0 +1,1572 @@
+<!DOCTYPE html>
+<html lang="en" data-color-mode="dark" data-light-theme="light" data-dark-theme="dark">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Stacked PRs — Draft Blog Posts · The GitHub Blog</title>
+
+<!-- ── GitHub Fonts: Mona Sans + Monaspace Neon ──────── -->
+<link rel="preconnect" href="https://github.blog" crossorigin>
+<style>
+  @font-face {
+    font-family: 'Mona Sans';
+    src: url('https://github.blog/wp-content/themes/github-2021/dist/fonts/mona-sans.woff2') format('woff2');
+    font-weight: 200 900;
+    font-display: swap;
+    font-style: normal;
+  }
+  @font-face {
+    font-family: 'Monaspace Neon';
+    src: url('https://github.blog/wp-content/themes/github-2021/dist/fonts/MonaspaceNeon-Regular.woff2') format('woff2');
+    font-weight: 400;
+    font-display: swap;
+    font-style: normal;
+  }
+</style>
+
+<style>
+  /* ═══════════════════════════════════════════════════════
+     PRIMER DESIGN TOKENS — GitHub Dark Theme
+     Sourced from primer.style/product/primitives/color
+     ═══════════════════════════════════════════════════════ */
+  :root {
+    /* ── Neutral scale (dark) ─────────────────────── */
+    --color-scale-gray-0:   #f0f6fc;
+    --color-scale-gray-1:   #c9d1d9;
+    --color-scale-gray-2:   #b1bac4;
+    --color-scale-gray-3:   #8b949e;
+    --color-scale-gray-4:   #6e7681;
+    --color-scale-gray-5:   #484f58;
+    --color-scale-gray-6:   #30363d;
+    --color-scale-gray-7:   #21262d;
+    --color-scale-gray-8:   #161b22;
+    --color-scale-gray-9:   #0d1117;
+
+    /* ── Semantic: background ─────────────────────── */
+    --bgColor-default:      #0d1117;
+    --bgColor-muted:        #161b22;
+    --bgColor-inset:        #010409;
+    --bgColor-emphasis:     #6e7681;
+
+    /* ── Semantic: foreground ─────────────────────── */
+    --fgColor-default:      #e6edf3;
+    --fgColor-muted:        #8b949e;
+    --fgColor-onEmphasis:   #ffffff;
+
+    /* ── Semantic: border ─────────────────────────── */
+    --borderColor-default:  #30363d;
+    --borderColor-muted:    #21262d;
+
+    /* ── Accent (blue) ────────────────────────────── */
+    --color-accent-fg:      #58a6ff;
+    --color-accent-emphasis:#1f6feb;
+    --color-accent-muted:   rgba(56,139,253,.4);
+    --color-accent-subtle:  rgba(56,139,253,.15);
+
+    /* ── Success (green) ──────────────────────────── */
+    --color-success-fg:     #3fb950;
+    --color-success-emphasis:#238636;
+    --color-success-muted:  rgba(46,160,67,.4);
+    --color-success-subtle: rgba(46,160,67,.15);
+
+    /* ── Danger (red) ─────────────────────────────── */
+    --color-danger-fg:      #f85149;
+    --color-danger-emphasis: #da3633;
+    --color-danger-subtle:  rgba(248,81,73,.15);
+
+    /* ── Attention (yellow/orange) ─────────────────── */
+    --color-attention-fg:   #d29922;
+    --color-attention-emphasis:#9e6a03;
+    --color-attention-subtle:rgba(187,128,9,.15);
+
+    /* ── Done (purple) ────────────────────────────── */
+    --color-done-fg:        #a371f7;
+    --color-done-emphasis:  #8957e5;
+    --color-done-subtle:    rgba(163,113,247,.15);
+
+    /* ── Open (green, same as success) ────────────── */
+    --color-open-fg:        #3fb950;
+    --color-open-emphasis:  #238636;
+
+    /* ── Sponsors (pink) ──────────────────────────── */
+    --color-sponsors-fg:    #db61a2;
+
+    /* ── Typography ───────────────────────────────── */
+    --fontStack-sansSerif:
+      'Mona Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI',
+      Helvetica, Arial, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji';
+    --fontStack-monospace:
+      'Monaspace Neon', ui-monospace, SFMono-Regular, 'SF Mono',
+      Menlo, Consolas, 'Liberation Mono', monospace;
+
+    /* ── Primer typography scale ──────────────────── */
+    --text-display-size:      40px;
+    --text-title-size-large:  32px;
+    --text-title-size-medium: 20px;
+    --text-title-size-small:  16px;
+    --text-body-size-large:   16px;
+    --text-body-size-medium:  14px;
+    --text-body-size-small:   12px;
+
+    /* ── GitHub blog sizing ───────────────────────── */
+    --base-size-4: 0.25rem;
+    --base-size-8: 0.5rem;
+    --base-size-12: 0.75rem;
+    --base-size-16: 1rem;
+    --base-size-20: 1.25rem;
+    --base-size-24: 1.5rem;
+    --base-size-32: 2rem;
+    --base-size-36: 2.25rem;
+    --base-size-40: 2.5rem;
+    --base-size-48: 3rem;
+    --base-size-64: 4rem;
+
+    /* ── Layout ───────────────────────────────────── */
+    --max-width-article:  720px;
+    --max-width-container:1280px;
+    --p-responsive-blog:  24px;
+    --radius-medium:      6px;
+    --radius-large:       12px;
+  }
+
+  /* ═══════════════════════════════════════════════════════
+     RESET
+     ═══════════════════════════════════════════════════════ */
+  *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+
+  html { scroll-behavior: smooth; }
+
+  body {
+    font-family: var(--fontStack-sansSerif);
+    background-color: var(--bgColor-default);
+    color: var(--fgColor-default);
+    line-height: 1.5;
+    font-size: var(--text-body-size-large);
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+
+  ::selection {
+    background: var(--color-accent-muted);
+    color: var(--fgColor-onEmphasis);
+  }
+
+  /* ═══════════════════════════════════════════════════════
+     GITHUB BLOG HEADER — matches github.blog chrome
+     ═══════════════════════════════════════════════════════ */
+  .site-header {
+    background: var(--bgColor-default);
+    border-bottom: 1px solid var(--borderColor-default);
+    position: sticky;
+    top: 0;
+    z-index: 200;
+  }
+
+  .site-header-inner {
+    max-width: var(--max-width-container);
+    margin: 0 auto;
+    padding: var(--base-size-12) var(--p-responsive-blog);
+    display: flex;
+    align-items: center;
+    gap: var(--base-size-8);
+  }
+
+  .site-header .mark-github {
+    color: var(--fgColor-onEmphasis);
+    flex-shrink: 0;
+  }
+
+  .site-header .separator {
+    color: var(--fgColor-muted);
+    opacity: .3;
+    font-size: var(--text-title-size-medium);
+    font-weight: 300;
+  }
+
+  .site-header .blog-link {
+    font-family: var(--fontStack-sansSerif);
+    font-size: var(--text-title-size-medium);
+    font-weight: 600;
+    color: var(--fgColor-default);
+    text-decoration: none;
+  }
+  .site-header .blog-link:hover { color: var(--fgColor-onEmphasis); }
+
+  .site-header nav {
+    margin-left: auto;
+    display: flex;
+    gap: var(--base-size-24);
+    align-items: center;
+  }
+  .site-header nav a {
+    font-size: var(--text-body-size-medium);
+    color: var(--fgColor-muted);
+    text-decoration: none;
+    font-weight: 500;
+    transition: color .15s;
+  }
+  .site-header nav a:hover { color: var(--fgColor-default); }
+
+  /* ═══════════════════════════════════════════════════════
+     LAYOUT — matches github.blog content column
+     ═══════════════════════════════════════════════════════ */
+  .page-wrapper {
+    max-width: var(--max-width-article);
+    margin: 0 auto;
+    padding: var(--base-size-48) var(--p-responsive-blog) var(--base-size-64);
+  }
+
+  /* ═══════════════════════════════════════════════════════
+     DRAFT BANNER — Primer attention/warning pattern
+     ═══════════════════════════════════════════════════════ */
+  .draft-banner {
+    background: var(--color-attention-subtle);
+    border: 1px solid var(--color-attention-fg);
+    border-radius: var(--radius-medium);
+    padding: var(--base-size-8) var(--base-size-16);
+    margin-bottom: var(--base-size-32);
+    display: flex;
+    align-items: center;
+    gap: var(--base-size-8);
+    font-size: var(--text-body-size-small);
+    font-weight: 600;
+    color: var(--color-attention-fg);
+  }
+  .draft-banner svg { flex-shrink: 0; }
+
+  /* ═══════════════════════════════════════════════════════
+     TOGGLE — Primer SegmentedControl pattern
+     Uses Primer border, bg, and radius tokens
+     ═══════════════════════════════════════════════════════ */
+  .toggle-bar {
+    display: flex;
+    background: var(--bgColor-muted);
+    border: 1px solid var(--borderColor-default);
+    border-radius: var(--radius-medium);
+    padding: 2px;
+    margin-bottom: var(--base-size-40);
+    position: sticky;
+    top: 53px; /* below header */
+    z-index: 100;
+  }
+
+  .toggle-btn {
+    flex: 1;
+    padding: var(--base-size-8) var(--base-size-16);
+    border: 1px solid transparent;
+    border-radius: calc(var(--radius-medium) - 2px);
+    background: transparent;
+    color: var(--fgColor-muted);
+    font-family: var(--fontStack-sansSerif);
+    font-size: var(--text-body-size-medium);
+    font-weight: 600;
+    cursor: pointer;
+    transition: all .15s ease;
+    text-align: center;
+    line-height: 1.4;
+  }
+  .toggle-btn:hover {
+    color: var(--fgColor-default);
+    background: var(--color-scale-gray-7);
+  }
+  .toggle-btn.active {
+    background: var(--bgColor-default);
+    color: var(--fgColor-default);
+    border-color: var(--borderColor-default);
+    box-shadow: 0 1px 0 0 rgba(1,4,9,.4);
+  }
+  .toggle-btn .subtitle {
+    display: block;
+    font-size: var(--text-body-size-small);
+    font-weight: 400;
+    color: var(--fgColor-muted);
+    margin-top: 2px;
+  }
+  .toggle-btn.active .subtitle { color: var(--fgColor-muted); }
+
+  /* ═══════════════════════════════════════════════════════
+     ARTICLE BASE
+     ═══════════════════════════════════════════════════════ */
+  .article {
+    display: none;
+    animation: fadeIn .3s ease;
+  }
+  .article.active { display: block; }
+
+  @keyframes fadeIn {
+    from { opacity: 0; transform: translateY(8px); }
+    to   { opacity: 1; transform: translateY(0); }
+  }
+
+  /* ═══════════════════════════════════════════════════════
+     TYPOGRAPHY — Primer / github.blog scale
+     H1: 36px/700 (blog h1 preset)
+     H2: 32px/700
+     H3: 24px/600
+     Body: 16px/400, line-height 1.5
+     ═══════════════════════════════════════════════════════ */
+  h1 {
+    font-family: var(--fontStack-sansSerif);
+    font-size: var(--base-size-36);
+    font-weight: 700;
+    line-height: 1.25;
+    letter-spacing: -.02em;
+    color: var(--fgColor-onEmphasis);
+    margin-bottom: var(--base-size-12);
+  }
+
+  .byline {
+    color: var(--fgColor-muted);
+    font-size: var(--text-body-size-medium);
+    margin-bottom: var(--base-size-32);
+    padding-bottom: var(--base-size-24);
+    border-bottom: 1px solid var(--borderColor-default);
+    line-height: 1.5;
+  }
+
+  h2 {
+    font-family: var(--fontStack-sansSerif);
+    font-size: var(--base-size-32);
+    font-weight: 700;
+    line-height: 1.25;
+    margin-top: var(--base-size-48);
+    margin-bottom: var(--base-size-20);
+    color: var(--fgColor-default);
+  }
+  h2 .section-number {
+    color: var(--color-accent-fg);
+    font-weight: 800;
+    margin-right: .25rem;
+    font-variant-numeric: tabular-nums;
+  }
+
+  h3 {
+    font-family: var(--fontStack-sansSerif);
+    font-size: var(--base-size-20);
+    font-weight: 600;
+    line-height: 1.25;
+    margin-top: var(--base-size-24);
+    margin-bottom: var(--base-size-12);
+    color: var(--fgColor-default);
+  }
+
+  p {
+    margin-bottom: var(--base-size-16);
+    color: var(--fgColor-default);
+    line-height: 1.625;
+  }
+
+  strong { color: var(--fgColor-onEmphasis); font-weight: 600; }
+
+  em {
+    color: var(--color-done-fg);
+    font-style: italic;
+  }
+
+  a {
+    color: var(--color-accent-fg);
+    text-decoration: underline;
+    text-decoration-color: var(--color-accent-muted);
+    text-underline-offset: 3px;
+    transition: text-decoration-color .15s;
+  }
+  a:hover {
+    text-decoration-color: var(--color-accent-fg);
+  }
+
+  /* ── Inline code: Primer codeInline pattern ──── */
+  code {
+    font-family: var(--fontStack-monospace);
+    font-size: .9em;
+    background: var(--color-scale-gray-7);
+    color: var(--fgColor-default);
+    padding: .2em .4em;
+    border-radius: var(--radius-medium);
+    border: 1px solid var(--borderColor-muted);
+  }
+
+  /* ── Code blocks: Primer codeBlock pattern ───── */
+  pre {
+    background: var(--bgColor-muted);
+    border: 1px solid var(--borderColor-default);
+    border-radius: var(--radius-medium);
+    padding: var(--base-size-16);
+    overflow-x: auto;
+    margin: var(--base-size-16) 0;
+    font-family: var(--fontStack-monospace);
+    font-size: var(--text-body-size-medium);
+    line-height: 1.6;
+    color: var(--fgColor-muted);
+  }
+  pre code {
+    background: none;
+    padding: 0;
+    border: none;
+    color: inherit;
+    font-size: inherit;
+  }
+
+  blockquote {
+    border-left: 3px solid var(--color-accent-emphasis);
+    padding: var(--base-size-8) var(--base-size-16);
+    margin: var(--base-size-16) 0;
+    background: var(--color-accent-subtle);
+    border-radius: 0 var(--radius-medium) var(--radius-medium) 0;
+    color: var(--fgColor-muted);
+    font-style: italic;
+  }
+
+  ul, ol {
+    margin: var(--base-size-8) 0 var(--base-size-16) var(--base-size-24);
+    color: var(--fgColor-default);
+  }
+  li {
+    margin-bottom: var(--base-size-4);
+    line-height: 1.625;
+  }
+  li::marker { color: var(--fgColor-muted); }
+
+  hr {
+    border: none;
+    height: 1px;
+    background: var(--borderColor-default);
+    margin: var(--base-size-48) 0;
+  }
+
+  /* ═══════════════════════════════════════════════════════
+     INTERACTIVE DIAGRAM PLACEHOLDERS
+     ═══════════════════════════════════════════════════════ */
+  .diagram {
+    position: relative;
+    border: 1px solid var(--borderColor-default);
+    border-radius: var(--radius-medium);
+    background: var(--bgColor-inset);
+    margin: var(--base-size-24) 0;
+    overflow: hidden;
+  }
+
+  .diagram-canvas {
+    width: 100%;
+    aspect-ratio: 16 / 9;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .diagram-canvas::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background-image:
+      linear-gradient(var(--color-accent-subtle) 1px, transparent 1px),
+      linear-gradient(90deg, var(--color-accent-subtle) 1px, transparent 1px);
+    background-size: 32px 32px;
+    opacity: .3;
+    animation: gridPulse 5s ease-in-out infinite;
+  }
+  @keyframes gridPulse {
+    0%, 100% { opacity: .2; }
+    50%      { opacity: .4; }
+  }
+
+  .diagram-icon {
+    position: relative;
+    z-index: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: var(--base-size-8);
+  }
+  .diagram-icon svg {
+    width: 48px;
+    height: 48px;
+    color: var(--fgColor-muted);
+    opacity: .25;
+    animation: float 3s ease-in-out infinite;
+  }
+  @keyframes float {
+    0%, 100% { transform: translateY(0); }
+    50%      { transform: translateY(-6px); }
+  }
+  .diagram-icon .label {
+    font-size: var(--text-body-size-small);
+    font-weight: 600;
+    color: var(--fgColor-muted);
+    letter-spacing: .04em;
+    text-transform: uppercase;
+  }
+
+  /* Flowing accent lines */
+  .diagram-canvas .flow-line {
+    position: absolute;
+    height: 2px;
+    background: linear-gradient(90deg, transparent, var(--color-accent-fg), transparent);
+    animation: flowLine 3s linear infinite;
+    opacity: .2;
+  }
+  @keyframes flowLine {
+    0%   { transform: translateX(-100%); }
+    100% { transform: translateX(200%); }
+  }
+  .diagram-canvas .flow-line:nth-child(2) {
+    background: linear-gradient(90deg, transparent, var(--color-success-fg), transparent);
+    animation-delay: 1s;
+    animation-duration: 4s;
+  }
+  .diagram-canvas .flow-line:nth-child(3) {
+    background: linear-gradient(90deg, transparent, var(--color-done-fg), transparent);
+    animation-delay: 2s;
+    animation-duration: 3.5s;
+  }
+
+  /* Description block */
+  .diagram-description {
+    padding: var(--base-size-12) var(--base-size-16);
+    border-top: 1px solid var(--borderColor-default);
+    background: var(--bgColor-muted);
+  }
+  .diagram-title {
+    font-size: var(--text-body-size-medium);
+    font-weight: 600;
+    color: var(--color-accent-fg);
+    margin-bottom: var(--base-size-4);
+    display: flex;
+    align-items: center;
+    gap: var(--base-size-8);
+  }
+  .diagram-title::before {
+    content: '';
+    width: 8px;
+    height: 8px;
+    border-radius: 2px;
+    background: var(--color-accent-fg);
+    flex-shrink: 0;
+  }
+  .diagram-spec {
+    font-size: var(--text-body-size-small);
+    color: var(--fgColor-muted);
+    line-height: 1.5;
+  }
+  .diagram-spec strong {
+    color: var(--color-done-fg);
+    font-weight: 600;
+  }
+
+  /* Primer Label / IssueLabel style tags */
+  .diagram-tag {
+    display: inline-block;
+    font-size: var(--text-body-size-small);
+    font-weight: 600;
+    padding: 0 7px;
+    border-radius: 2em;
+    margin-top: var(--base-size-8);
+    line-height: 22px;
+    border: 1px solid transparent;
+  }
+  .tag-interactive {
+    background: var(--color-accent-subtle);
+    color: var(--color-accent-fg);
+    border-color: var(--color-accent-muted);
+  }
+  .tag-animated {
+    background: var(--color-success-subtle);
+    color: var(--color-success-fg);
+    border-color: var(--color-success-muted);
+  }
+  .tag-scroll {
+    background: var(--color-done-subtle);
+    color: var(--color-done-fg);
+  }
+
+  /* ═══════════════════════════════════════════════════════
+     CALLOUT BOXES — Primer Flash / Alert pattern
+     ═══════════════════════════════════════════════════════ */
+  .callout {
+    border: 1px solid var(--borderColor-default);
+    border-radius: var(--radius-medium);
+    padding: var(--base-size-16);
+    margin: var(--base-size-24) 0;
+    background: var(--bgColor-muted);
+  }
+  .callout.insight {
+    border-color: var(--color-accent-emphasis);
+    background: var(--color-accent-subtle);
+  }
+  .callout.warning {
+    border-color: var(--color-attention-fg);
+    background: var(--color-attention-subtle);
+  }
+  .callout.key-point {
+    border-color: var(--color-success-emphasis);
+    background: var(--color-success-subtle);
+  }
+
+  .callout-header {
+    font-size: var(--text-body-size-small);
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: .05em;
+    margin-bottom: var(--base-size-4);
+  }
+  .callout.insight .callout-header  { color: var(--color-accent-fg); }
+  .callout.warning .callout-header  { color: var(--color-attention-fg); }
+  .callout.key-point .callout-header { color: var(--color-success-fg); }
+
+  .callout p {
+    margin-bottom: 0;
+    font-size: var(--text-body-size-medium);
+    line-height: 1.5;
+  }
+  .callout.insight p  { color: var(--fgColor-default); }
+  .callout.warning p  { color: var(--fgColor-default); }
+  .callout.key-point p { color: var(--fgColor-default); }
+
+  /* ═══════════════════════════════════════════════════════
+     TABLE — Primer DataTable pattern
+     ═══════════════════════════════════════════════════════ */
+  .comparison-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin: var(--base-size-16) 0;
+    font-size: var(--text-body-size-medium);
+    border: 1px solid var(--borderColor-default);
+    border-radius: var(--radius-medium);
+    overflow: hidden;
+  }
+  .comparison-table th {
+    text-align: left;
+    font-weight: 600;
+    padding: var(--base-size-8) var(--base-size-12);
+    background: var(--bgColor-muted);
+    border-bottom: 1px solid var(--borderColor-default);
+    color: var(--fgColor-default);
+    font-size: var(--text-body-size-small);
+  }
+  .comparison-table td {
+    padding: var(--base-size-8) var(--base-size-12);
+    border-bottom: 1px solid var(--borderColor-muted);
+    color: var(--fgColor-muted);
+  }
+  .comparison-table td strong { color: var(--fgColor-default); }
+  .comparison-table tr:last-child td { border-bottom: none; }
+  .comparison-table tr:hover td {
+    background: var(--color-scale-gray-8);
+  }
+
+  /* ═══════════════════════════════════════════════════════
+     COMMIT GRAPH (CSS-only mini graph)
+     Uses Primer semantic colors for branches
+     ═══════════════════════════════════════════════════════ */
+  .commit-graph-mini {
+    display: flex;
+    align-items: center;
+    padding: var(--base-size-32);
+    justify-content: center;
+  }
+  .commit-dot {
+    width: 12px;
+    height: 12px;
+    border-radius: 50%;
+    border: 2px solid;
+    position: relative;
+    animation: commitAppear .5s ease both;
+  }
+  .commit-dot::after {
+    content: '';
+    position: absolute;
+    right: -24px;
+    top: 50%;
+    width: 24px;
+    height: 2px;
+    transform: translateY(-50%);
+  }
+  .commit-dot:last-child::after { display: none; }
+
+  .commit-dot.main   { border-color: var(--color-accent-fg); }
+  .commit-dot.main::after { background: var(--color-accent-fg); }
+  .commit-dot.stack1 { border-color: var(--color-success-fg); }
+  .commit-dot.stack1::after { background: var(--color-success-fg); }
+  .commit-dot.stack2 { border-color: var(--color-done-fg); }
+  .commit-dot.stack2::after { background: var(--color-done-fg); }
+  .commit-dot.stack3 { border-color: var(--color-attention-fg); }
+  .commit-dot.stack3::after { background: var(--color-attention-fg); }
+
+  .commit-dot:nth-child(1) { animation-delay: .1s; }
+  .commit-dot:nth-child(2) { animation-delay: .2s; }
+  .commit-dot:nth-child(3) { animation-delay: .3s; }
+  .commit-dot:nth-child(4) { animation-delay: .4s; }
+  .commit-dot:nth-child(5) { animation-delay: .5s; }
+  .commit-dot:nth-child(6) { animation-delay: .6s; }
+  .commit-dot:nth-child(7) { animation-delay: .7s; }
+
+  @keyframes commitAppear {
+    from { transform: scale(0); opacity: 0; }
+    to   { transform: scale(1); opacity: 1; }
+  }
+
+  /* ═══════════════════════════════════════════════════════
+     TABLE OF CONTENTS — Primer Box pattern
+     ═══════════════════════════════════════════════════════ */
+  .toc {
+    background: var(--bgColor-muted);
+    border: 1px solid var(--borderColor-default);
+    border-radius: var(--radius-medium);
+    padding: var(--base-size-16) var(--base-size-20);
+    margin-bottom: var(--base-size-32);
+  }
+  .toc-title {
+    font-size: var(--text-body-size-small);
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: .05em;
+    color: var(--fgColor-muted);
+    margin-bottom: var(--base-size-8);
+  }
+  .toc ol {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    counter-reset: toc;
+  }
+  .toc li {
+    counter-increment: toc;
+    margin-bottom: var(--base-size-4);
+    line-height: 1.5;
+  }
+  .toc li::before {
+    content: counter(toc, decimal-leading-zero);
+    color: var(--color-accent-fg);
+    font-weight: 600;
+    font-size: var(--text-body-size-small);
+    margin-right: var(--base-size-8);
+    font-family: var(--fontStack-monospace);
+  }
+  .toc a {
+    color: var(--fgColor-muted);
+    text-decoration: none;
+    font-size: var(--text-body-size-medium);
+    transition: color .15s;
+  }
+  .toc a:hover { color: var(--color-accent-fg); }
+
+  /* ═══════════════════════════════════════════════════════
+     FOOTER — matches github.blog bottom
+     ═══════════════════════════════════════════════════════ */
+  .site-footer {
+    border-top: 1px solid var(--borderColor-default);
+    padding: var(--base-size-32) var(--p-responsive-blog);
+    text-align: center;
+    font-size: var(--text-body-size-small);
+    color: var(--fgColor-muted);
+  }
+  .site-footer a {
+    color: var(--color-accent-fg);
+    text-decoration: none;
+  }
+  .site-footer a:hover { text-decoration: underline; }
+  .site-footer .footer-links {
+    display: flex;
+    justify-content: center;
+    gap: var(--base-size-24);
+    margin-top: var(--base-size-8);
+    flex-wrap: wrap;
+  }
+
+  /* ═══════════════════════════════════════════════════════
+     RESPONSIVE — matches github.blog breakpoints
+     ═══════════════════════════════════════════════════════ */
+  @media (max-width: 768px) {
+    :root {
+      --p-responsive-blog: 16px;
+      --base-size-36: 1.75rem;
+      --base-size-32: 1.5rem;
+    }
+    .page-wrapper {
+      padding-top: var(--base-size-32);
+    }
+    .diagram-canvas { aspect-ratio: 4 / 3; }
+    .toggle-btn .subtitle { display: none; }
+    .site-header nav { display: none; }
+  }
+
+  @media (max-width: 480px) {
+    .toggle-btn {
+      font-size: var(--text-body-size-small);
+      padding: var(--base-size-8);
+    }
+  }
+</style>
+</head>
+<body>
+
+<!-- ═══════════════════════════════════════════════════════
+     SITE HEADER — github.blog chrome
+     ═══════════════════════════════════════════════════════ -->
+<header class="site-header">
+  <div class="site-header-inner">
+    <a href="https://github.com" aria-label="GitHub" class="mark-github">
+      <svg height="32" viewBox="0 0 98 96" width="32" fill="currentColor">
+        <path d="M48.854 0C21.839 0 0 22 0 49.217c0 21.756 13.993 40.172 33.405 46.69 2.427.49 3.316-1.059 3.316-2.362 0-1.141-.08-5.052-.08-9.127-13.59 2.934-16.42-5.867-16.42-5.867-2.184-5.704-5.42-7.17-5.42-7.17-4.448-3.015.324-3.015.324-3.015 4.934.326 7.523 5.052 7.523 5.052 4.367 7.496 11.404 5.378 14.235 4.074.404-3.178 1.699-5.378 3.074-6.6-10.839-1.141-22.243-5.378-22.243-24.283 0-5.378 1.94-9.778 5.014-13.2-.485-1.222-2.184-6.275.486-13.038 0 0 4.125-1.304 13.426 5.052a46.97 46.97 0 0 1 12.214-1.63c4.125 0 8.33.571 12.213 1.63 9.302-6.356 13.427-5.052 13.427-5.052 2.67 6.763.97 11.816.485 13.038 3.155 3.422 5.015 7.822 5.015 13.2 0 18.905-11.404 23.06-22.324 24.283 1.78 1.548 3.316 4.481 3.316 9.126 0 6.6-.08 11.897-.08 13.526 0 1.304.89 2.853 3.316 2.364 19.412-6.52 33.405-24.935 33.405-46.691C97.707 22 75.788 0 48.854 0z"/>
+      </svg>
+    </a>
+    <span class="separator">/</span>
+    <a href="https://github.blog" class="blog-link">Blog</a>
+    <nav>
+      <a href="https://github.blog/changelog/">Changelog</a>
+      <a href="https://docs.github.com/">Docs</a>
+    </nav>
+  </div>
+</header>
+
+<div class="page-wrapper">
+
+  <!-- ── Draft Banner (Primer Flash pattern) ──── -->
+  <div class="draft-banner">
+    <svg width="16" height="16" viewBox="0 0 16 16" fill="currentColor">
+      <path d="M6.457 1.047c.659-1.234 2.427-1.234 3.086 0l6.082 11.378A1.75 1.75 0 0 1 14.082 15H1.918a1.75 1.75 0 0 1-1.543-2.575ZM8 5a.75.75 0 0 0-.75.75v2.5a.75.75 0 0 0 1.5 0v-2.5A.75.75 0 0 0 8 5Zm1 6a1 1 0 1 0-2 0 1 1 0 0 0 2 0Z"/>
+    </svg>
+    Draft — Internal Review Only
+  </div>
+
+  <!-- ── Toggle (Primer SegmentedControl) ──────── -->
+  <div class="toggle-bar" role="tablist" aria-label="Blog post selector">
+    <button class="toggle-btn active" role="tab" aria-selected="true" data-target="article-agentic" onclick="switchArticle(this)">
+      Git in the Agentic Era
+      <span class="subtitle">AI workflows &amp; collaboration</span>
+    </button>
+    <button class="toggle-btn" role="tab" aria-selected="false" data-target="article-stacked" onclick="switchArticle(this)">
+      Why Stacked PRs
+      <span class="subtitle">The craft of small changes</span>
+    </button>
+  </div>
+
+  <!-- ═══════════════════════════════════════════════
+       ARTICLE 1 — GIT IN THE AGENTIC ERA
+       ═══════════════════════════════════════════════ -->
+  <article class="article active" id="article-agentic">
+
+    <h1>Git in the Agentic Era</h1>
+    <p class="byline">How AI agents are reshaping version control — and why your branching strategy is about to matter more than ever.</p>
+
+    <!-- TOC -->
+    <div class="toc">
+      <div class="toc-title">In this post</div>
+      <ol>
+        <li><a href="#a1">The Cambrian Explosion of Commits</a></li>
+        <li><a href="#a2">How Agents Think About Branches</a></li>
+        <li><a href="#a3">The Merge Conflict Problem at Scale</a></li>
+        <li><a href="#a4">Stacks as Agent Primitives</a></li>
+        <li><a href="#a5">Designing for Parallel Agents</a></li>
+        <li><a href="#a6">The Human-in-the-Loop Review Surface</a></li>
+        <li><a href="#a7">What Changes, What Stays</a></li>
+      </ol>
+    </div>
+
+    <!-- ── Section 1 ──────────────────────────────── -->
+    <h2 id="a1"><span class="section-number">01</span> The Cambrian Explosion of Commits</h2>
+
+    <p>Something fundamental shifted when AI agents started writing code. Not the quality of individual lines — that's been debated endlessly — but the <strong>sheer volume and velocity</strong> of changes flowing into repositories. A single developer paired with an AI agent can produce the commit throughput of a small team. Five developers with agents? You're looking at the commit graph of a mid-size open source project.</p>
+
+    <p>This isn't hypothetical. Teams using Copilot coding agents are already seeing branches created, pushed, and PR'd in minutes. The traditional mental model — one developer, one branch, one review cycle — is buckling under the weight of a world where your AI collaborator doesn't need coffee breaks.</p>
+
+    <!-- DIAGRAM 1: Commit Velocity Comparison -->
+    <div class="diagram">
+      <div class="diagram-canvas">
+        <div class="flow-line" style="width:60%; top:30%; left:10%;"></div>
+        <div class="flow-line" style="width:45%; top:50%; left:25%;"></div>
+        <div class="flow-line" style="width:55%; top:70%; left:15%;"></div>
+        <div class="diagram-icon">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+            <polyline points="22 12 18 12 15 21 9 3 6 12 2 12"></polyline>
+          </svg>
+          <span class="label">Interactive Diagram</span>
+        </div>
+      </div>
+      <div class="diagram-description">
+        <div class="diagram-title">Commit Velocity: Human vs. Human + Agent</div>
+        <div class="diagram-spec">
+          <strong>Animated timeline visualization.</strong> Left side shows a typical developer's commit cadence over a week — bursty, with long gaps for review and context-switching. Right side shows the same developer paired with an agent: steady, high-frequency commits filling the gaps. A draggable <strong>time scrubber</strong> lets the reader advance through a simulated week. Commit dots pulse into existence and stack vertically when they collide in time. A running counter shows cumulative commits, lines changed, and PRs opened. The "aha" moment: watching the agent's timeline stay active during the developer's off-hours.
+          <br><br>
+          <strong>Interaction:</strong> Drag to scrub time. Toggle between "single dev," "dev + agent," and "5 devs + agents" modes. Hover commits to see mock descriptions.
+        </div>
+        <span class="diagram-tag tag-interactive">Interactive · Draggable Timeline</span>
+        <span class="diagram-tag tag-animated">Animated · Auto-play on Scroll</span>
+      </div>
+    </div>
+
+    <p>The question isn't whether this throughput is coming — it's here. The question is: <strong>what does your Git workflow look like when it needs to absorb this?</strong></p>
+
+    <!-- ── Section 2 ──────────────────────────────── -->
+    <h2 id="a2"><span class="section-number">02</span> How Agents Think About Branches</h2>
+
+    <p>Here's a subtle but important insight: AI agents don't "think" about branches the way humans do. A developer builds a mental model of the whole feature, then decides how to decompose it into commits. An agent operates differently — it receives a task, produces a solution, and needs a place to put it. Its branching strategy is a function of its <em>task decomposition</em>, not its understanding of the overall architecture.</p>
+
+    <p>This means agents naturally produce work that maps well to stacks: each task is a self-contained unit that depends on the previous one. The challenge is giving agents a framework to express this dependency explicitly, rather than dumping everything into one monolithic branch.</p>
+
+    <!-- DIAGRAM 2: Agent Task Decomposition → Branch Structure -->
+    <div class="diagram">
+      <div class="diagram-canvas">
+        <div class="flow-line" style="width:50%; top:35%; left:20%;"></div>
+        <div class="flow-line" style="width:40%; top:55%; left:30%;"></div>
+        <div class="diagram-icon">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+            <circle cx="12" cy="12" r="3"></circle>
+            <path d="M12 1v4M12 19v4M4.22 4.22l2.83 2.83M16.95 16.95l2.83 2.83M1 12h4M19 12h4M4.22 19.78l2.83-2.83M16.95 7.05l2.83-2.83"></path>
+          </svg>
+          <span class="label">Interactive Diagram</span>
+        </div>
+      </div>
+      <div class="diagram-description">
+        <div class="diagram-title">Agent Task Decomposition → Branch Structure</div>
+        <div class="diagram-spec">
+          <strong>Animated transformation diagram.</strong> Starts with a single large task card (e.g., "Add user authentication") that visually fractures into 4 sub-task cards via a satisfying shatter animation. Each sub-task card then morphs into a branch, and the branches arrange themselves into a vertical stack connected by arrows. Labels animate in: <code>auth-model → auth-routes → auth-middleware → auth-tests</code>.
+          <br><br>
+          The second phase shows what happens <em>without</em> stacks: the same 4 sub-tasks collapse into a single bloated branch with a red warning pulse showing 847 lines changed. A toggle lets the reader flip between "stacked" and "monolith" views.
+          <br><br>
+          <strong>Interaction:</strong> Click to replay the decomposition animation. Toggle between stacked/monolith views. Hover each layer to see a mock diff stat.
+        </div>
+        <span class="diagram-tag tag-animated">Animated · Shatter + Morph</span>
+        <span class="diagram-tag tag-interactive">Interactive · Toggle View</span>
+      </div>
+    </div>
+
+    <div class="callout insight">
+      <div class="callout-header">💡 Key Insight</div>
+      <p>Agents don't need to understand your whole codebase to produce well-structured stacks. They need a <strong>protocol</strong> for expressing task dependencies — and that protocol is exactly what <code>gh stack</code> provides.</p>
+    </div>
+
+    <!-- ── Section 3 ──────────────────────────────── -->
+    <h2 id="a3"><span class="section-number">03</span> The Merge Conflict Problem at Scale</h2>
+
+    <p>Merge conflicts are annoying for humans. For agents, they're catastrophic. An agent that encounters a conflict can't resolve it with the same intuition a human developer brings — understanding which side "wins" requires the kind of holistic context that agents are still building toward. So instead, we need workflows that <strong>minimize the surface area for conflicts</strong> in the first place.</p>
+
+    <p>This is where stacked PRs become not just a nice workflow, but a structural necessity. When work is organized into a linear chain of dependencies, the merge semantics are unambiguous. Layer 1 merges first. Layer 2 rebases onto the updated main. Layer 3 follows. There's no diamond-shaped merge graph, no ambiguous three-way merge — just a clean, linear history.</p>
+
+    <!-- DIAGRAM 3: Conflict Surface Area -->
+    <div class="diagram">
+      <div class="diagram-canvas">
+        <div class="flow-line" style="width:70%; top:25%; left:5%;"></div>
+        <div class="flow-line" style="width:55%; top:45%; left:15%;"></div>
+        <div class="flow-line" style="width:65%; top:65%; left:10%;"></div>
+        <div class="diagram-icon">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M6 3v12"></path>
+            <circle cx="18" cy="6" r="3"></circle>
+            <circle cx="6" cy="18" r="3"></circle>
+            <path d="M18 9a9 9 0 0 1-9 9"></path>
+          </svg>
+          <span class="label">Interactive Diagram</span>
+        </div>
+      </div>
+      <div class="diagram-description">
+        <div class="diagram-title">Conflict Surface Area: Parallel Branches vs. Stacked PRs</div>
+        <div class="diagram-spec">
+          <strong>Split-screen animated git graph.</strong> Left panel: 3 independent feature branches diverging from main, each modifying overlapping files. As commits accumulate, red "conflict zones" pulse and grow where branches touch the same files — visualized as overlapping heat-map regions. A merge attempt shows the classic diamond merge with red ✕ markers.
+          <br><br>
+          Right panel: the same 3 features organized as a stack. Commits flow linearly. The heat-map regions never overlap because each layer builds atop the last. Merge is a clean cascade with green ✓ markers. A <strong>file-overlap counter</strong> tracks how many files are touched by multiple branches in each mode.
+          <br><br>
+          <strong>Interaction:</strong> Drag a slider to add more commits and watch conflict zones grow/shrink. Click individual commits to see which files they touch. Play/pause the auto-advance.
+        </div>
+        <span class="diagram-tag tag-interactive">Interactive · Slider + Click</span>
+        <span class="diagram-tag tag-scroll">Scroll-Triggered · Split View</span>
+      </div>
+    </div>
+
+    <!-- ── Section 4 ──────────────────────────────── -->
+    <h2 id="a4"><span class="section-number">04</span> Stacks as Agent Primitives</h2>
+
+    <p>With <code>gh stack</code>, agents have a first-class API for expressing their work as ordered, dependent layers. Running <code>gh skill install github/gh-stack</code> teaches an agent how to:</p>
+
+    <ul>
+      <li><strong>Initialize a stack</strong> — creating the first branch and establishing the chain</li>
+      <li><strong>Add layers</strong> — each new unit of work gets its own branch, automatically targeting the previous layer</li>
+      <li><strong>Cascade rebases</strong> — when a lower layer changes, all layers above it rebase automatically</li>
+      <li><strong>Submit the stack</strong> — creating PRs for every layer with a single command</li>
+    </ul>
+
+    <p>This transforms the agent's output from "here's a big diff" into "here's an ordered sequence of reviewable changes." The agent doesn't need to be brilliant about decomposition — it just needs to follow the protocol.</p>
+
+    <pre><code><span style="color:var(--fgColor-muted)"># Agent workflow: from task to stack</span>
+<span style="color:var(--color-success-fg)">gs init</span> auth-model           <span style="color:var(--fgColor-muted)"># Layer 1: data model</span>
+<span style="color:var(--fgColor-muted)"># ... agent writes model code ...</span>
+<span style="color:var(--color-success-fg)">gs add</span>  auth-routes          <span style="color:var(--fgColor-muted)"># Layer 2: API routes</span>
+<span style="color:var(--fgColor-muted)"># ... agent writes route handlers ...</span>
+<span style="color:var(--color-success-fg)">gs add</span>  auth-middleware       <span style="color:var(--fgColor-muted)"># Layer 3: middleware</span>
+<span style="color:var(--fgColor-muted)"># ... agent writes middleware ...</span>
+<span style="color:var(--color-success-fg)">gs add</span>  auth-tests           <span style="color:var(--fgColor-muted)"># Layer 4: test suite</span>
+<span style="color:var(--fgColor-muted)"># ... agent writes tests ...</span>
+
+<span style="color:var(--color-success-fg)">gs push</span>                      <span style="color:var(--fgColor-muted)"># Push all branches</span>
+<span style="color:var(--color-success-fg)">gs submit</span>                    <span style="color:var(--fgColor-muted)"># Create the full stack of PRs</span></code></pre>
+
+    <!-- DIAGRAM 4: Stack Lifecycle Animation -->
+    <div class="diagram">
+      <div class="diagram-canvas">
+        <!-- Mini commit graph -->
+        <div class="commit-graph-mini">
+          <div class="commit-dot main"></div>
+          <div class="commit-dot main"></div>
+          <div class="commit-dot stack1"></div>
+          <div class="commit-dot stack1"></div>
+          <div class="commit-dot stack2"></div>
+          <div class="commit-dot stack3"></div>
+          <div class="commit-dot stack3"></div>
+        </div>
+      </div>
+      <div class="diagram-description">
+        <div class="diagram-title">Stack Lifecycle: Init → Build → Submit → Merge</div>
+        <div class="diagram-spec">
+          <strong>Full lifecycle animation in 4 acts</strong>, triggered by scroll position (Ciechanowski-style progressive reveal):
+          <br><br>
+          <strong>Act 1 — Init:</strong> A single branch line extends from a <code>main</code> commit node. The first layer branch forks off with a smooth curve animation. Branch label fades in.
+          <br>
+          <strong>Act 2 — Build:</strong> Commits appear as dots along each layer's branch. As each layer completes, a new branch forks from its tip. Color-coded by layer (blue → green → purple → orange). The stack "grows" upward.
+          <br>
+          <strong>Act 3 — Submit:</strong> PR badges materialize next to each branch. A "stack navigator" UI mockup slides in from the right, showing the familiar GitHub stack map.
+          <br>
+          <strong>Act 4 — Merge:</strong> Bottom layer merges into main with a satisfying snap animation. Remaining layers cascade-rebase (branches visually slide down). Repeat until all layers are merged. Confetti optional.
+          <br><br>
+          <strong>Interaction:</strong> Scroll-driven. Each act locks to viewport as reader scrolls. Playback speed adjustable via subtle slider.
+        </div>
+        <span class="diagram-tag tag-scroll">Scroll-Driven · 4-Act Sequence</span>
+        <span class="diagram-tag tag-animated">Animated · SVG Path Drawing</span>
+      </div>
+    </div>
+
+    <!-- ── Section 5 ──────────────────────────────── -->
+    <h2 id="a5"><span class="section-number">05</span> Designing for Parallel Agents</h2>
+
+    <p>The next frontier isn't one agent — it's <strong>many agents working simultaneously</strong>. Imagine dispatching five agents to work on five different features, each producing its own stack. The repository becomes a coordination problem, and Git is the coordination layer.</p>
+
+    <p>Stacked PRs provide natural isolation boundaries. Each stack is a self-contained chain of changes. Two stacks can evolve independently as long as they don't touch the same files. And when they do overlap, the linear merge semantics of stacks make resolution predictable: one stack merges first, the other rebases on top.</p>
+
+    <!-- DIAGRAM 5: Multi-Agent Coordination -->
+    <div class="diagram">
+      <div class="diagram-canvas">
+        <div class="flow-line" style="width:40%; top:20%; left:30%;"></div>
+        <div class="flow-line" style="width:50%; top:40%; left:20%;"></div>
+        <div class="flow-line" style="width:35%; top:60%; left:35%;"></div>
+        <div class="flow-line" style="width:45%; top:80%; left:25%;"></div>
+        <div class="diagram-icon">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+            <rect x="2" y="2" width="8" height="8" rx="2"></rect>
+            <rect x="14" y="2" width="8" height="8" rx="2"></rect>
+            <rect x="2" y="14" width="8" height="8" rx="2"></rect>
+            <rect x="14" y="14" width="8" height="8" rx="2"></rect>
+          </svg>
+          <span class="label">Interactive Diagram</span>
+        </div>
+      </div>
+      <div class="diagram-description">
+        <div class="diagram-title">Multi-Agent Coordination: Parallel Stacks on a Shared Repository</div>
+        <div class="diagram-spec">
+          <strong>Animated top-down repository map.</strong> The <code>main</code> branch runs as a horizontal trunk. Multiple stacks branch upward like coral growths, each color-coded to an "agent" (with a small robot avatar). Agents work simultaneously — commits appear in real-time across all stacks.
+          <br><br>
+          A <strong>file heatmap overlay</strong> highlights which files are being touched by each agent. When two agents touch the same file, a yellow warning glow pulses. A "merge sequence" animation shows the optimal order: stacks with no conflicts merge first, then conflicting stacks rebase and merge.
+          <br><br>
+          <strong>Interaction:</strong> Play/pause the simulation. Click on any stack to see its PR list. Drag agents to different tasks and watch the repository structure reorganize. Toggle the heatmap overlay on/off.
+        </div>
+        <span class="diagram-tag tag-interactive">Interactive · Simulation</span>
+        <span class="diagram-tag tag-animated">Animated · Real-time</span>
+      </div>
+    </div>
+
+    <div class="callout key-point">
+      <div class="callout-header">🔑 Design Principle</div>
+      <p>The best Git workflows for agents aren't about controlling the agent — they're about giving the agent <strong>mechanical sympathy</strong> for how Git works. Stacks provide that sympathy by mapping cleanly to linear dependency chains, which is how agents naturally decompose tasks.</p>
+    </div>
+
+    <!-- ── Section 6 ──────────────────────────────── -->
+    <h2 id="a6"><span class="section-number">06</span> The Human-in-the-Loop Review Surface</h2>
+
+    <p>Here's the part that matters most: agents produce code, but <strong>humans review it</strong>. And reviewing a 2,000-line PR from an agent is genuinely harder than reviewing a 2,000-line PR from a colleague. You can't interrupt the agent in a hallway to ask "what were you thinking here?" You can't rely on shared context from a planning meeting.</p>
+
+    <p>Stacked PRs solve this by making the agent's reasoning visible in the structure of the stack itself. Each layer is a <em>decision</em>: "first I built the data model, then I built the routes on top of it, then I added the tests." The stack <strong>is</strong> the explanation.</p>
+
+    <!-- DIAGRAM 6: Review Experience Comparison -->
+    <div class="diagram">
+      <div class="diagram-canvas">
+        <div class="flow-line" style="width:55%; top:30%; left:15%;"></div>
+        <div class="flow-line" style="width:45%; top:60%; left:25%;"></div>
+        <div class="diagram-icon">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path>
+            <circle cx="12" cy="12" r="3"></circle>
+          </svg>
+          <span class="label">Interactive Diagram</span>
+        </div>
+      </div>
+      <div class="diagram-description">
+        <div class="diagram-title">The Review Experience: Monolith PR vs. Stacked PRs</div>
+        <div class="diagram-spec">
+          <strong>Side-by-side scrolling mock of a PR review interface.</strong> Left side: a monolith PR with 847 lines changed across 12 files. The diff is a wall of green and red. A "cognitive load" meter fills to the top and turns red. A simulated reviewer's cursor scrolls frantically, with thought bubbles: "wait, why did this change?", "is this related to the auth work?"
+          <br><br>
+          Right side: the same 847 lines split across 4 stacked PRs. Each PR has its own focused diff (180-250 lines). The cognitive load meter stays comfortably in the green. Thought bubbles now read: "okay, this is just the data model", "this layer only adds routes." The GitHub stack navigator UI is visible in the header, showing progress through the stack.
+          <br><br>
+          <strong>Interaction:</strong> Scroll through both reviews simultaneously. Click on stack layers to jump between PRs. A "time to review" counter runs on both sides — the stacked version completes faster.
+        </div>
+        <span class="diagram-tag tag-scroll">Scroll-Driven · Parallel Mockup</span>
+        <span class="diagram-tag tag-interactive">Interactive · Click to Navigate</span>
+      </div>
+    </div>
+
+    <p>This matters especially for security-sensitive changes. When an agent touches authentication code, you want to review <em>just</em> the authentication layer in isolation. You want CI running against <em>just</em> that layer. You want approval workflows scoped to <em>just</em> that change. Stacks give you all of this for free.</p>
+
+    <!-- ── Section 7 ──────────────────────────────── -->
+    <h2 id="a7"><span class="section-number">07</span> What Changes, What Stays</h2>
+
+    <p>Git itself doesn't change. Commits, branches, merges, rebases — these primitives are as relevant in the agentic era as they were in 2005. What changes is the <strong>workflow layer</strong> on top of them.</p>
+
+    <p>The agentic era demands workflows that are:</p>
+    <ul>
+      <li><strong>Programmatic</strong> — agents need CLIs and APIs, not GUIs</li>
+      <li><strong>Linear</strong> — dependency chains, not dependency graphs</li>
+      <li><strong>Reviewable</strong> — small, focused units of change</li>
+      <li><strong>Automatable</strong> — cascading rebases, batch merges, CI per layer</li>
+    </ul>
+
+    <p>Stacked PRs — and specifically <code>gh stack</code> — deliver all four. They aren't a new idea, but they're an idea whose time has come. The agentic era doesn't just make stacked PRs useful; it makes them <strong>necessary</strong>.</p>
+
+    <div class="callout key-point">
+      <div class="callout-header">🚀 Getting Started</div>
+      <p>Install the <code>gh stack</code> CLI extension, teach your agent to use it with <code>gh skill install github/gh-stack</code>, and start breaking those monolith PRs into reviewable stacks. Your future self — and your future agents — will thank you.</p>
+    </div>
+
+    <hr>
+    <p style="color:var(--fgColor-muted); font-size:var(--text-body-size-small); text-align:center;">Draft v0.1 · April 2026 · GitHub Engineering Blog</p>
+
+  </article>
+
+</div><!-- /page-wrapper -->
+  <!-- ═══════════════════════════════════════════════
+       ARTICLE 2 — WHY STACKED PRS
+       ═══════════════════════════════════════════════ -->
+  <article class="article" id="article-stacked">
+
+    <h1>Why Stacked PRs</h1>
+    <p class="byline">The geometry of code review, and how ordering your changes unlocks better software.</p>
+
+    <!-- TOC -->
+    <div class="toc">
+      <div class="toc-title">In this post</div>
+      <ol>
+        <li><a href="#s1">The Big PR Problem</a></li>
+        <li><a href="#s2">What Is a Stack, Exactly?</a></li>
+        <li><a href="#s3">The Anatomy of a Good Layer</a></li>
+        <li><a href="#s4">How Merging Works</a></li>
+        <li><a href="#s5">Rebases: The Cascade</a></li>
+        <li><a href="#s6">Stacks in Practice: Real Patterns</a></li>
+        <li><a href="#s7">When Not to Stack</a></li>
+        <li><a href="#s8">Getting Started with gh stack</a></li>
+      </ol>
+    </div>
+
+    <!-- ── Section 1 ──────────────────────────────── -->
+    <h2 id="s1"><span class="section-number">01</span> The Big PR Problem</h2>
+
+    <p>We've all been there. You open a pull request and the diff is <strong>1,200 lines</strong>. Twelve files changed. The description says "Add user authentication and fix some related stuff." Your heart sinks a little.</p>
+
+    <p>Research consistently shows that review quality degrades sharply as PR size increases. A 50-line PR gets careful, line-by-line scrutiny. A 500-line PR gets a skim. A 1,200-line PR gets a "LGTM 🚢" and a prayer.</p>
+
+    <!-- DIAGRAM 1: Review Quality vs. PR Size -->
+    <div class="diagram">
+      <div class="diagram-canvas">
+        <div class="flow-line" style="width:70%; top:40%; left:10%;"></div>
+        <div class="flow-line" style="width:50%; top:60%; left:20%;"></div>
+        <div class="diagram-icon">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+            <line x1="18" y1="20" x2="18" y2="10"></line>
+            <line x1="12" y1="20" x2="12" y2="4"></line>
+            <line x1="6" y1="20" x2="6" y2="14"></line>
+            <line x1="2" y1="20" x2="22" y2="20"></line>
+          </svg>
+          <span class="label">Interactive Diagram</span>
+        </div>
+      </div>
+      <div class="diagram-description">
+        <div class="diagram-title">The Review Quality Curve</div>
+        <div class="diagram-spec">
+          <strong>Animated chart with scroll-driven reveal.</strong> X-axis: lines changed (0 to 2,000). Y-axis: review thoroughness (0% to 100%). A bold curve starts high-left and drops steeply after ~200 lines, plateauing near 10% for large PRs. As the reader scrolls, the curve draws itself like a pen stroke.
+          <br><br>
+          Vertical marker lines drop at key thresholds: 50 lines ("careful review"), 200 lines ("review fatigue begins"), 500 lines ("skim territory"), 1000+ lines ("LGTM"). Each marker animates a mini PR mockup that transforms from detailed comments to a single thumbs-up emoji.
+          <br><br>
+          A second overlay curve (dashed) shows <strong>time-to-merge</strong> increasing exponentially. The intersection point — where both curves cross a "danger zone" — pulses with a red glow.
+          <br><br>
+          <strong>Interaction:</strong> Hover on the curve to see data points. Drag a "your PR size" marker along the X-axis and see your predicted review quality and merge time. Real data sourced from GitHub's internal analysis.
+        </div>
+        <span class="diagram-tag tag-scroll">Scroll-Driven · Curve Drawing</span>
+        <span class="diagram-tag tag-interactive">Interactive · Draggable Marker</span>
+      </div>
+    </div>
+
+    <div class="callout warning">
+      <div class="callout-header">⚠️ The Real Cost</div>
+      <p>Big PRs don't just get worse reviews — they get <strong>slower</strong> reviews. Every day a PR sits open is a day its branches diverge further from main, accumulating merge conflicts and blocking downstream work.</p>
+    </div>
+
+    <!-- ── Section 2 ──────────────────────────────── -->
+    <h2 id="s2"><span class="section-number">02</span> What Is a Stack, Exactly?</h2>
+
+    <p>A <strong>stack</strong> is a series of pull requests in the same repository where each PR targets the branch of the PR below it, forming an ordered chain that lands on your main branch. That's the formal definition. But it's easier to understand visually.</p>
+
+    <p>Think of it like building a house: you pour the foundation (layer 1), frame the walls (layer 2), install the wiring (layer 3), and finish the drywall (layer 4). Each layer depends on the one below. You can't install wiring without walls, and you can't frame walls without a foundation. But you <em>can</em> get the foundation inspected while you're framing the walls.</p>
+
+    <!-- DIAGRAM 2: Stack Anatomy -->
+    <div class="diagram">
+      <div class="diagram-canvas">
+        <div class="flow-line" style="width:60%; top:25%; left:15%;"></div>
+        <div class="flow-line" style="width:45%; top:45%; left:25%;"></div>
+        <div class="flow-line" style="width:55%; top:65%; left:10%;"></div>
+        <div class="flow-line" style="width:40%; top:85%; left:30%;"></div>
+        <div class="diagram-icon">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+            <rect x="3" y="3" width="18" height="4" rx="1"></rect>
+            <rect x="3" y="9" width="18" height="4" rx="1"></rect>
+            <rect x="3" y="15" width="18" height="4" rx="1"></rect>
+          </svg>
+          <span class="label">Interactive Diagram</span>
+        </div>
+      </div>
+      <div class="diagram-description">
+        <div class="diagram-title">Anatomy of a Stack</div>
+        <div class="diagram-spec">
+          <strong>Interactive 3D-ish stack visualization.</strong> Four translucent layer cards float in a slightly isometric perspective, stacked vertically with visible depth. Each card shows: branch name, PR number, diff stats, CI status badge, and review status.
+          <br><br>
+          The stack is connected by glowing dependency arrows. Hovering a layer highlights its dependencies below and dependents above. Clicking a layer "expands" it to show a mock diff summary. The bottom layer (closest to main) has a green "Ready to merge" badge; layers above show "Waiting on dependencies."
+          <br><br>
+          A <strong>"main" branch line</strong> runs along the left edge. The stack's base connects to it. A label reads "base: main" at the connection point. The GitHub stack navigator mockup appears in the upper-right as a tooltip.
+          <br><br>
+          <strong>Interaction:</strong> Hover layers to highlight dependency chain. Click to expand diff summary. Drag to rotate the stack slightly in 3D. Responsive: flattens to 2D on mobile.
+        </div>
+        <span class="diagram-tag tag-interactive">Interactive · 3D Perspective</span>
+        <span class="diagram-tag tag-animated">Animated · Hover Transitions</span>
+      </div>
+    </div>
+
+    <p>GitHub understands stacks natively. When you create a stack, the PR UI shows a <strong>stack map</strong> — a navigable list of all layers. Branch protection rules evaluate against the final target branch, not the intermediate ones. CI runs as if each layer were targeting main directly.</p>
+
+    <!-- ── Section 3 ──────────────────────────────── -->
+    <h2 id="s3"><span class="section-number">03</span> The Anatomy of a Good Layer</h2>
+
+    <p>Not all stacks are created equal. A great stack has layers that are:</p>
+
+    <table class="comparison-table">
+      <thead>
+        <tr>
+          <th>Property</th>
+          <th>What It Means</th>
+          <th>Example</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td><strong>Focused</strong></td>
+          <td>One logical change per layer</td>
+          <td>"Add User model" — not "Add User model and also refactor the logger"</td>
+        </tr>
+        <tr>
+          <td><strong>Buildable</strong></td>
+          <td>Each layer compiles and passes CI on its own</td>
+          <td>Layer 2 shouldn't break tests that Layer 1 introduced</td>
+        </tr>
+        <tr>
+          <td><strong>Ordered</strong></td>
+          <td>Dependencies flow downward</td>
+          <td>Routes depend on models, not the other way around</td>
+        </tr>
+        <tr>
+          <td><strong>Reviewable</strong></td>
+          <td>~100-300 lines changed</td>
+          <td>Small enough to review in one sitting, big enough to be meaningful</td>
+        </tr>
+      </tbody>
+    </table>
+
+    <h3>A worked example</h3>
+
+    <p>Let's say you're adding a new <code>/users</code> API endpoint with authentication. Here's how you might stack it:</p>
+
+    <pre><code><span style="color:var(--color-success-fg)">Layer 1</span> · <span style="color:var(--fgColor-muted)">auth-model</span>       → User model + migration      <span style="color:var(--fgColor-muted)">(~120 lines)</span>
+<span style="color:var(--color-done-fg)">Layer 2</span> · <span style="color:var(--fgColor-muted)">auth-routes</span>       → CRUD endpoints              <span style="color:var(--fgColor-muted)">(~200 lines)</span>
+<span style="color:var(--color-accent-fg)">Layer 3</span> · <span style="color:var(--fgColor-muted)">auth-middleware</span>    → JWT middleware + guards     <span style="color:var(--fgColor-muted)">(~150 lines)</span>
+<span style="color:var(--color-attention-fg)">Layer 4</span> · <span style="color:var(--fgColor-muted)">auth-tests</span>        → Integration + unit tests    <span style="color:var(--fgColor-muted)">(~280 lines)</span></code></pre>
+
+    <p>Total: 750 lines of code. Four PRs averaging ~190 lines each. Each one reviewable in under 15 minutes. Each one independently testable. Each one a complete thought.</p>
+
+    <!-- ── Section 4 ──────────────────────────────── -->
+    <h2 id="s4"><span class="section-number">04</span> How Merging Works</h2>
+
+    <p>This is where stacks get elegant. When you merge the bottom layer of a stack, GitHub automatically retargets the next layer to point at main. The cascading merge is seamless — you can merge the entire stack in one click, or merge layers individually as they're approved.</p>
+
+    <!-- DIAGRAM 3: Merge Cascade Animation -->
+    <div class="diagram">
+      <div class="diagram-canvas">
+        <div class="flow-line" style="width:65%; top:30%; left:10%;"></div>
+        <div class="flow-line" style="width:50%; top:50%; left:20%;"></div>
+        <div class="flow-line" style="width:60%; top:70%; left:12%;"></div>
+        <div class="diagram-icon">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+            <polyline points="16 3 21 3 21 8"></polyline>
+            <line x1="4" y1="20" x2="21" y2="3"></line>
+            <polyline points="21 16 21 21 16 21"></polyline>
+            <line x1="15" y1="15" x2="21" y2="21"></line>
+            <line x1="4" y1="4" x2="9" y2="9"></line>
+          </svg>
+          <span class="label">Interactive Diagram</span>
+        </div>
+      </div>
+      <div class="diagram-description">
+        <div class="diagram-title">The Merge Cascade</div>
+        <div class="diagram-spec">
+          <strong>Step-through animation of the merge lifecycle.</strong> Starts with a 4-layer stack, each layer showing its PR status badge.
+          <br><br>
+          <strong>Step 1:</strong> Layer 1 gets approved. Its "Merge" button pulses green. User clicks it.
+          <br>
+          <strong>Step 2:</strong> Layer 1 dissolves into <code>main</code> with a liquid merge animation. The branch line absorbs into the main trunk. A green checkmark appears.
+          <br>
+          <strong>Step 3:</strong> Layer 2 automatically retargets — its base arrow slides from the now-gone Layer 1 branch to <code>main</code>. A "rebasing..." spinner appears briefly, then resolves.
+          <br>
+          <strong>Step 4:</strong> Repeat. Each layer merges, the next retargets. The stack shrinks until all layers are merged and only <code>main</code> remains.
+          <br><br>
+          A sidebar shows the <strong>stack navigator</strong> updating in real-time as layers merge: checkmarks appear, "current layer" indicator moves up.
+          <br><br>
+          <strong>Interaction:</strong> Click "Merge" button on each layer to advance the animation step by step. Or click "Merge All" to watch the full cascade auto-play. Replay button.
+        </div>
+        <span class="diagram-tag tag-interactive">Interactive · Step-Through</span>
+        <span class="diagram-tag tag-animated">Animated · Liquid Merge Effect</span>
+      </div>
+    </div>
+
+    <div class="callout insight">
+      <div class="callout-header">💡 Merge Queue Integration</div>
+      <p>Each layer can go through your merge queue independently. Want to merge the bottom 3 layers that are approved while layer 4 is still in review? Go for it. The stack handles the retargeting automatically.</p>
+    </div>
+
+    <!-- ── Section 5 ──────────────────────────────── -->
+    <h2 id="s5"><span class="section-number">05</span> Rebases: The Cascade</h2>
+
+    <p>The hardest part of working with stacked branches has always been the rebase problem. Change something in layer 1, and layers 2, 3, and 4 all need to rebase. Manually, this is tedious and error-prone. With <code>gh stack</code>, it's one command: <code>gs rebase</code>. Or one click from the GitHub UI.</p>
+
+    <p>Here's what happens under the hood:</p>
+
+    <!-- DIAGRAM 4: Rebase Cascade Mechanics -->
+    <div class="diagram">
+      <div class="diagram-canvas">
+        <div class="flow-line" style="width:55%; top:25%; left:20%;"></div>
+        <div class="flow-line" style="width:45%; top:50%; left:15%;"></div>
+        <div class="flow-line" style="width:60%; top:75%; left:18%;"></div>
+        <div class="diagram-icon">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+            <polyline points="17 1 21 5 17 9"></polyline>
+            <path d="M3 11V9a4 4 0 0 1 4-4h14"></path>
+            <polyline points="7 23 3 19 7 15"></polyline>
+            <path d="M21 13v2a4 4 0 0 1-4 4H3"></path>
+          </svg>
+          <span class="label">Interactive Diagram</span>
+        </div>
+      </div>
+      <div class="diagram-description">
+        <div class="diagram-title">Cascading Rebase: How Changes Propagate Through a Stack</div>
+        <div class="diagram-spec">
+          <strong>Animated git graph showing rebase mechanics.</strong> Initial state: a 4-layer stack with commits on each layer's branch. A new commit appears on Layer 1 (highlighted with a pulsing glow).
+          <br><br>
+          The rebase cascade begins: Layer 2's branch "detaches" from its old base with a smooth unhook animation, then "reattaches" to Layer 1's new tip. The commits on Layer 2 slide rightward along the timeline, rewriting their hashes (old hashes fade, new hashes fade in). The process repeats for Layer 3 and Layer 4 in sequence — a domino-like cascade up the stack.
+          <br><br>
+          A <strong>before/after toggle</strong> lets readers flip between the pre-rebase and post-rebase state of the entire graph. Commit hashes are shown in monospace — readers can see that every commit above the change point gets a new SHA.
+          <br><br>
+          A second scenario shows what happens when <code>main</code> itself gets new commits (e.g., another PR merges). The entire stack rebases onto the new main tip, keeping every layer's diff clean.
+          <br><br>
+          <strong>Interaction:</strong> Click "Add commit to Layer 1" to trigger the cascade. Toggle before/after views. Click individual commits to see their parent pointers. Switch between "layer change" and "main change" scenarios.
+        </div>
+        <span class="diagram-tag tag-interactive">Interactive · Multi-Scenario</span>
+        <span class="diagram-tag tag-animated">Animated · Domino Cascade</span>
+      </div>
+    </div>
+
+    <p>The key insight is that cascading rebases are <em>semantically simple</em> even though they're <em>mechanically complex</em>. Each layer's diff stays exactly the same relative to its parent — only the base changes. This means your review comments stay valid, your CI results stay meaningful, and your mental model of the stack stays intact.</p>
+
+    <!-- ── Section 6 ──────────────────────────────── -->
+    <h2 id="s6"><span class="section-number">06</span> Stacks in Practice: Real Patterns</h2>
+
+    <p>After working with stacks extensively at GitHub, some patterns have emerged:</p>
+
+    <h3>The Feature Stack</h3>
+    <p>The most common pattern. One feature, decomposed into logical layers. The example above (model → routes → middleware → tests) is a feature stack.</p>
+
+    <h3>The Refactor-Then-Build Stack</h3>
+    <p>Layer 1 refactors existing code to prepare for a new feature. Layer 2+ builds the feature on top of the clean foundation. This is especially powerful because the refactoring can be reviewed and approved <em>before</em> the feature work lands on top of it.</p>
+
+    <h3>The Migration Stack</h3>
+    <p>For database migrations or API version bumps: Layer 1 adds the new schema/API, Layer 2 migrates callers, Layer 3 removes the old code. Each layer is independently deployable and rollback-friendly.</p>
+
+    <!-- DIAGRAM 5: Stack Patterns Gallery -->
+    <div class="diagram">
+      <div class="diagram-canvas">
+        <div class="flow-line" style="width:45%; top:30%; left:25%;"></div>
+        <div class="flow-line" style="width:55%; top:55%; left:15%;"></div>
+        <div class="flow-line" style="width:40%; top:75%; left:30%;"></div>
+        <div class="diagram-icon">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+            <rect x="2" y="3" width="20" height="5" rx="1"></rect>
+            <rect x="2" y="10" width="20" height="5" rx="1"></rect>
+            <rect x="2" y="17" width="20" height="5" rx="1"></rect>
+          </svg>
+          <span class="label">Interactive Diagram</span>
+        </div>
+      </div>
+      <div class="diagram-description">
+        <div class="diagram-title">Stack Patterns Gallery: Feature · Refactor · Migration</div>
+        <div class="diagram-spec">
+          <strong>Tabbed interactive showcase of three stack patterns.</strong> Each tab shows a specific pattern visualized as a vertical stack with distinct visual treatments:
+          <br><br>
+          <strong>Feature Stack:</strong> 4 layers building upward, each layer adds new files (file icons appear). Color gradient from cool (model) to warm (UI).
+          <br>
+          <strong>Refactor-Then-Build:</strong> Layer 1 is visually distinct (dashed border, refactor icon). Layers 2-3 build on top with solid borders. An animation shows the "before" code transforming to "after" code in Layer 1 before the feature layers appear.
+          <br>
+          <strong>Migration Stack:</strong> 3 layers with a timeline metaphor. Layer 1 has a ➕ icon (add new), Layer 2 has a 🔄 icon (migrate), Layer 3 has a ➖ icon (remove old). Traffic indicators show requests flowing from old → new as layers merge.
+          <br><br>
+          <strong>Interaction:</strong> Tab between patterns. Hover layers for details. Each pattern auto-plays a mini lifecycle animation when selected.
+        </div>
+        <span class="diagram-tag tag-interactive">Interactive · Tabbed Gallery</span>
+        <span class="diagram-tag tag-animated">Animated · Pattern Lifecycle</span>
+      </div>
+    </div>
+
+    <!-- ── Section 7 ──────────────────────────────── -->
+    <h2 id="s7"><span class="section-number">07</span> When Not to Stack</h2>
+
+    <p>Stacks aren't always the answer. Some guidelines for when a single PR is fine:</p>
+
+    <ul>
+      <li><strong>Small changes:</strong> If the whole thing is under 200 lines, just ship it as one PR.</li>
+      <li><strong>Truly independent changes:</strong> If two changes don't share files or concepts, they're parallel PRs, not a stack.</li>
+      <li><strong>Urgent hotfixes:</strong> When production is on fire, skip the ceremony. One PR, one review, one merge.</li>
+    </ul>
+
+    <p>The question to ask is: <strong>"Would a reviewer benefit from seeing these changes in a specific order?"</strong> If yes, stack. If no, don't.</p>
+
+    <!-- ── Section 8 ──────────────────────────────── -->
+    <h2 id="s8"><span class="section-number">08</span> Getting Started with <code>gh stack</code></h2>
+
+    <p>Getting started takes about 60 seconds:</p>
+
+    <pre><code><span style="color:var(--fgColor-muted)"># 1. Install the CLI extension</span>
+<span style="color:var(--color-accent-fg)">gh extension install</span> github/gh-stack
+
+<span style="color:var(--fgColor-muted)"># 2. (Optional) Create a shorter alias</span>
+<span style="color:var(--color-accent-fg)">gh stack alias</span>
+
+<span style="color:var(--fgColor-muted)"># 3. Start your first stack</span>
+<span style="color:var(--color-success-fg)">gs init</span> my-first-layer
+<span style="color:var(--fgColor-muted)"># ... make your changes and commit ...</span>
+
+<span style="color:var(--fgColor-muted)"># 4. Add another layer</span>
+<span style="color:var(--color-success-fg)">gs add</span> my-second-layer
+<span style="color:var(--fgColor-muted)"># ... make more changes and commit ...</span>
+
+<span style="color:var(--fgColor-muted)"># 5. Push and create PRs</span>
+<span style="color:var(--color-success-fg)">gs push</span>
+<span style="color:var(--color-success-fg)">gs submit</span></code></pre>
+
+    <!-- DIAGRAM 6: The Full Workflow -->
+    <div class="diagram">
+      <div class="diagram-canvas">
+        <div class="flow-line" style="width:50%; top:20%; left:20%;"></div>
+        <div class="flow-line" style="width:60%; top:40%; left:10%;"></div>
+        <div class="flow-line" style="width:45%; top:60%; left:25%;"></div>
+        <div class="flow-line" style="width:55%; top:80%; left:15%;"></div>
+        <div class="diagram-icon">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path>
+            <polyline points="22 4 12 14.01 9 11.01"></polyline>
+          </svg>
+          <span class="label">Interactive Diagram</span>
+        </div>
+      </div>
+      <div class="diagram-description">
+        <div class="diagram-title">The Complete Stack Workflow: Terminal → GitHub → Merge</div>
+        <div class="diagram-spec">
+          <strong>End-to-end animated walkthrough</strong> combining terminal and GitHub UI mockups.
+          <br><br>
+          <strong>Phase 1 — Terminal:</strong> A realistic terminal emulator shows each <code>gs</code> command being typed (typewriter effect) with output appearing. Branch names and commit messages are visible. The terminal sits on the left 60% of the screen.
+          <br>
+          <strong>Phase 2 — Push:</strong> After <code>gs push</code>, animated packets fly from the terminal to a GitHub cloud icon. Branch indicators appear on a remote graph.
+          <br>
+          <strong>Phase 3 — GitHub UI:</strong> The right 40% expands to show a mockup of the GitHub PR page with the stack navigator. Review comments appear. CI badges go green one by one.
+          <br>
+          <strong>Phase 4 — Merge:</strong> The "Merge Stack" button is clicked. The cascade plays. The stack collapses into main. A final stats card shows: "4 PRs merged, 750 lines reviewed, 0 conflicts."
+          <br><br>
+          <strong>Interaction:</strong> Scroll-driven with scroll-snapping at each phase. Click "replay" to watch again. On mobile, phases stack vertically.
+        </div>
+        <span class="diagram-tag tag-scroll">Scroll-Driven · 4-Phase Walkthrough</span>
+        <span class="diagram-tag tag-animated">Animated · Terminal + UI Mockup</span>
+      </div>
+    </div>
+
+    <div class="callout key-point">
+      <div class="callout-header">🎯 The Bottom Line</div>
+      <p>Stacked PRs aren't about adding process — they're about <strong>removing friction</strong>. Smaller PRs are faster to review, easier to understand, less likely to conflict, and quicker to merge. Stacks give you small PRs without losing the ability to ship big features. That's the whole pitch.</p>
+    </div>
+
+    <hr>
+    <p style="color:var(--fgColor-muted); font-size:var(--text-body-size-small); text-align:center;">Draft v0.1 · April 2026 · GitHub Engineering Blog</p>
+
+  </article>
+
+</div><!-- /page-wrapper -->
+
+<!-- ═══════════════════════════════════════════════════════
+     FOOTER — github.blog style
+     ═══════════════════════════════════════════════════════ -->
+<footer class="site-footer">
+  <p>© 2026 GitHub, Inc. · Draft v0.1 · April 2026</p>
+  <div class="footer-links">
+    <a href="https://github.blog">Blog</a>
+    <a href="https://github.com">GitHub</a>
+    <a href="https://docs.github.com">Docs</a>
+    <a href="https://github.github.com/gh-stack/">gh-stack</a>
+  </div>
+</footer>
+
+<!-- ═══════════════════════════════════════════════════════
+     SCRIPT
+     ═══════════════════════════════════════════════════════ -->
+<script>
+function switchArticle(btn) {
+  document.querySelectorAll('.toggle-btn').forEach(b => {
+    b.classList.remove('active');
+    b.setAttribute('aria-selected', 'false');
+  });
+  btn.classList.add('active');
+  btn.setAttribute('aria-selected', 'true');
+
+  const targetId = btn.getAttribute('data-target');
+  document.querySelectorAll('.article').forEach(a => a.classList.remove('active'));
+  document.getElementById(targetId).classList.add('active');
+
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+
+// Intersection observer for scroll-triggered diagram animations
+const diagrams = document.querySelectorAll('.diagram');
+const observer = new IntersectionObserver((entries) => {
+  entries.forEach(entry => {
+    if (entry.isIntersecting) {
+      entry.target.style.opacity = '1';
+      entry.target.style.transform = 'translateY(0)';
+    }
+  });
+}, { threshold: 0.1, rootMargin: '0px 0px -40px 0px' });
+
+diagrams.forEach(d => {
+  d.style.opacity = '0';
+  d.style.transform = 'translateY(12px)';
+  d.style.transition = 'opacity .4s ease, transform .4s ease';
+  observer.observe(d);
+});
+</script>
+
+</body>
+</html>
